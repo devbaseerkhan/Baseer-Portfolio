@@ -4,6 +4,7 @@ import BoxStack from "./components/boxStack";
 import Badge from "./components/Badge";
 import Button from "./components/Button";
 import AppTabs from "./components/appTabs";
+import ThemeSwitcher from "./components/ThemeSwitcher";
 import { IoBluetooth, IoSettingsOutline } from "react-icons/io5";
 import bronz from "../../public/bronz.png";
 import gold from "../../public/gold.png";
@@ -56,7 +57,7 @@ export default function Home() {
               +
             </button>
             <div className="flex items-baseline gap-2">
-              <span className="font-big title26 font-bold !text-success ">
+              <span className="font-big title26 font-bold text-primary ">
                 1,425
               </span>
               <span className="title16 font-big !text-white/60">
@@ -138,7 +139,7 @@ export default function Home() {
             <div className="flex flex-col gap-6 pl-2">
               <div>
                 <p className="title14">quest name</p>
-                <p className="title18 font-big !text-primary font-bold">
+                <p className="title18 font-big text-primary font-bold">
                   React website
                 </p>
               </div>
@@ -193,6 +194,7 @@ export default function Home() {
           </div>
         </aside>
       </div>
+      <ThemeSwitcher />
     </div>
   );
 }

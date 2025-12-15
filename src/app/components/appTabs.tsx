@@ -42,8 +42,8 @@ export default function AppTabs({ tabs }: AppTabsProps) {
               onClick={() => setActiveTab(tab.label)}
               onMouseEnter={() => setHoveredTab(tab.label)}
               onMouseLeave={() => setHoveredTab(null)}
-              className={`border-l-2 transition hover:border-[#ff1f4b88] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark cursor-pointer ${
-                isHighlighted ? "border-[#ff1f4bb3]" : "border-light"
+              className={`border-l-2 transition hover:border-primary-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark cursor-pointer ${
+                isHighlighted ? "border-primary" : "border-light"
               }`}
             >
               <Badge

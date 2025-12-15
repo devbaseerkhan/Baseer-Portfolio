@@ -3,17 +3,38 @@ import user from "../../public/user.png";
 import BoxStack from "./components/boxStack";
 import Badge from "./components/Badge";
 import Button from "./components/Button";
+import AppTabs from "./components/appTabs";
 import { IoBluetooth, IoSettingsOutline } from "react-icons/io5";
 import bronz from "../../public/bronz.png";
 import gold from "../../public/gold.png";
 import { CgCheckR, CgCloseR } from "react-icons/cg";
 
 const navTabs = [
-  { label: "Beginning", active: true },
-  { label: "Logs" },
-  { label: "Achievements" },
-  { label: "Creations" },
-  { label: "Games" },
+  {
+    label: "Beginning",
+    content:
+      "Blueprint sketches, rough drafts, and early experiments that set the tone for everything that follows.",
+  },
+  {
+    label: "Logs",
+    content:
+      "A running diary of builds, bumps, and breakthroughs collected while shipping new experiences.",
+  },
+  {
+    label: "Achievements",
+    content:
+      "Hard-won milestones, certifications, and shout-outs earned while leveling up the craft.",
+  },
+  {
+    label: "Creations",
+    content:
+      "A gallery of shipped products, prototypes, and playful tangents that show how ideas become real.",
+  },
+  {
+    label: "Games",
+    content:
+      "Side quests, game jams, and interactive toys built for fun, curiosity, and rapid iteration.",
+  },
 ];
 
 const questRewards = [
@@ -105,39 +126,7 @@ export default function Home() {
         </aside>
         <main className="relative flex min-h-[70vh] flex-col">
           <BoxStack className="flex flex-1 flex-col">
-            <div className="flex-1">
-              <div className="flex h-full flex-col gap-6 px-6 py-12">
-                <div className="text-center max-w-162.5 mx-auto">
-                  <p className="title18">
-                    Swimming through a vast network of interconnected devices
-                    and servers, spreading joy and whimsy to users across the
-                    globe
-                  </p>
-                  <span className="title14 !text-white/70">
-                    Artwork generated with Midjourney
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-5 gap-3.5 max-w-205 mx-auto -mb-14">
-              {navTabs.map((tab) => (
-                <button
-                  key={tab.label}
-                  className={`border-l-2 transition hover:border-[#ff1f4b88] cursor-pointer ${
-                    tab.active ? "border-[#ff1f4bb3]" : "border-light"
-                  }`}
-                >
-                  <Badge
-                    label={tab.label}
-                    variant={tab.active ? "active" : "inactive"}
-                    className="w-full"
-                  />
-                  <span className="block text-xs tracking-widest leading-3 uppercase text-white/50 font-iceland text-left p-2 bg-border/10">
-                    Navigate or consolidate launch since 2016
-                  </span>
-                </button>
-              ))}
-            </div>
+            <AppTabs tabs={navTabs} />
           </BoxStack>
         </main>
         <aside className="flex flex-col gap-4">

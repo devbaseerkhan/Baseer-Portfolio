@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Badge from "./Badge";
 
 type Tab = {
   label: string;
-  content: string;
+  content: ReactNode;
 };
 
 type AppTabsProps = {
@@ -14,22 +14,32 @@ type AppTabsProps = {
 export default function AppTabs({ tabs }: AppTabsProps) {
   const [activeTab, setActiveTab] = useState(tabs[0]?.label ?? "");
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
-  const activeContent =
-    tabs.find((tab) => tab.label === activeTab)?.content ?? "";
+  const activeContent = tabs.find((tab) => tab.label === activeTab)?.content;
+  const isTextContent =
+    typeof activeContent === "string" || typeof activeContent === "number";
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex-1">
-        <div className="flex h-full flex-col gap-6 px-6 py-12">
-          <div className="text-center max-w-162.5 mx-auto space-y-3">
+      <div className="flex-1 overflow-y-auto px-4 py-10 sm:px-6 sm:py-12">
+        {isTextContent ? (
+          <div className="max-w-162.5 mx-auto space-y-3 text-center">
             <p className="title18">{activeContent}</p>
             <span className="title14 !text-white/70">
               Tap through the tabs to explore more lore.
             </span>
           </div>
-        </div>
+        ) : (
+          activeContent ?? (
+            <div className="max-w-162.5 mx-auto space-y-3 text-center">
+              <p className="title18">Select a tab to view its contents.</p>
+              <span className="title14 !text-white/70">
+                Tap through the tabs to explore more lore.
+              </span>
+            </div>
+          )
+        )}
       </div>
-      <div className="grid grid-cols-5 gap-3.5 max-w-205 mx-auto -mb-14">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 max-w-205 mx-auto -mb-14">
         {tabs.map((tab) => {
           const isActive = tab.label === activeTab;
           const isHovered = tab.label === hoveredTab;

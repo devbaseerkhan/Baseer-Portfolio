@@ -5,6 +5,7 @@ import Badge from "./components/Badge";
 import Button from "./components/Button";
 import AppTabs from "./components/appTabs";
 import ThemeSwitcher from "./components/ThemeSwitcher";
+import LogsContent from "./components/logsContent";
 import { IoBluetooth, IoSettingsOutline } from "react-icons/io5";
 import bronz from "../../public/bronz.png";
 import gold from "../../public/gold.png";
@@ -18,8 +19,7 @@ const navTabs = [
   },
   {
     label: "Logs",
-    content:
-      "A running diary of builds, bumps, and breakthroughs collected while shipping new experiences.",
+    content: <LogsContent />,
   },
   {
     label: "Achievements",

@@ -1,0 +1,279 @@
+"use client";
+import Image from "next/image";
+import { useMemo, useState } from "react";
+
+type AchievementStatus = "achieved" | "in-progress" | "todo";
+type AchievementRarity = "legendary" | "epic";
+
+type Achievement = {
+  id: string;
+  title: string;
+  status: AchievementStatus;
+  rarity: AchievementRarity;
+  icon: string;
+  note?: string;
+};
+
+const statusTokens: Record<
+  AchievementStatus,
+  { label: string; tint: string; bar: string }
+> = {
+  achieved: {
+    label: "Achieved",
+    tint: "var(--color-primary)",
+    bar: "var(--color-primary)",
+  },
+  "in-progress": {
+    label: "In Progress",
+    tint: "var(--color-secondary-90)",
+    bar: "var(--color-secondary-90)",
+  },
+  todo: {
+    label: "Todo",
+    tint: "var(--color-success)",
+    bar: "var(--color-success)",
+  },
+};
+
+const statusOrder: AchievementStatus[] = ["achieved", "in-progress", "todo"];
+
+const rarityTokens: Record<
+  AchievementRarity,
+  { label: string; pill: string; text: string }
+> = {
+  legendary: {
+    label: "Legendary",
+    pill: "var(--color-warning-90)",
+    text: "#0a0606",
+  },
+  epic: {
+    label: "Epic",
+    pill: "var(--color-primary-20)",
+    text: "var(--color-white)",
+  },
+};
+
+const achievements: Achievement[] = [
+  {
+    id: "legendary-stars",
+    title: "1000 stars on my project",
+    status: "achieved",
+    rarity: "legendary",
+    icon: "/achievements/icon-mask.svg",
+  },
+  {
+    id: "personal-website",
+    title: "Release personal website",
+    status: "achieved",
+    rarity: "epic",
+    icon: "/achievements/icon-blade.svg",
+  },
+  {
+    id: "oss-plugin",
+    title: "Developed my open source plugin",
+    status: "achieved",
+    rarity: "epic",
+    icon: "/achievements/icon-blade.svg",
+  },
+  {
+    id: "markup-master",
+    title: "Master of markup",
+    status: "achieved",
+    rarity: "epic",
+    icon: "/achievements/icon-orbit.svg",
+  },
+  {
+    id: "pixel-perfect-1",
+    title: "Pixel-perfect perfectionist",
+    status: "achieved",
+    rarity: "epic",
+    icon: "/achievements/icon-orbit.svg",
+  },
+  {
+    id: "speed-demon",
+    title: '"Speed demon"',
+    status: "in-progress",
+    rarity: "epic",
+    icon: "/achievements/icon-crest.svg",
+  },
+  {
+    id: "pixel-perfect-2",
+    title: "Pixel-perfect perfectionist",
+    status: "achieved",
+    rarity: "epic",
+    icon: "/achievements/icon-orbit.svg",
+    note: "Alternate skin unlocked",
+  },
+  {
+    id: "accessibility",
+    title: "Accessibility advocate",
+    status: "todo",
+    rarity: "epic",
+    icon: "/achievements/icon-orbit.svg",
+  },
+  {
+    id: "browser-compat",
+    title: '"Browser compatibility"',
+    status: "in-progress",
+    rarity: "epic",
+    icon: "/achievements/icon-crest.svg",
+  },
+  {
+    id: "worth-noting",
+    title: "Additional worth noting event",
+    status: "todo",
+    rarity: "epic",
+    icon: "/achievements/icon-crest.svg",
+  },
+  {
+    id: "code-quality",
+    title: "Code quality guardian",
+    status: "in-progress",
+    rarity: "epic",
+    icon: "/achievements/icon-blade.svg",
+  },
+  {
+    id: "milestone",
+    title: "Another awesome milestone",
+    status: "achieved",
+    rarity: "epic",
+    icon: "/achievements/icon-crest.svg",
+  },
+  {
+    id: "worth-noting-2",
+    title: "Additional worth noting event",
+    status: "todo",
+    rarity: "epic",
+    icon: "/achievements/icon-orbit.svg",
+  },
+  {
+    id: "ui-polish",
+    title: "UI polish sprint",
+    status: "todo",
+    rarity: "epic",
+    icon: "/achievements/icon-mask.svg",
+  },
+];
+
+export default function AchievementsContent() {
+  const [activeStatuses, setActiveStatuses] = useState<AchievementStatus[]>([
+    "achieved",
+    "in-progress",
+    "todo",
+  ]);
+
+  const filtered = useMemo(
+    () => achievements.filter((item) => activeStatuses.includes(item.status)),
+    [activeStatuses]
+  );
+
+  const toggleStatus = (status: AchievementStatus) => {
+    setActiveStatuses((prev) =>
+      prev.includes(status)
+        ? prev.filter((value) => value !== status)
+        : [...prev, status]
+    );
+  };
+
+  const resetFilters = () =>
+    setActiveStatuses(["achieved", "in-progress", "todo"]);
+
+  return (
+    <div className="h-full w-full overflow-y-auto px-4 py-10 sm:px-6 lg:px-9 sm:py-12">
+      <div className="flex h-full flex-col gap-6">
+        <div className="flex flex-col items-center gap-2">
+          <h1 className="title18 text-center">Achievements</h1>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-primary bg-primary-10 px-2 py-2">
+          <div className="flex items-center gap-7">
+            <span className="title16 !text-info-light">Filter:</span>
+            <div className="flex flex-wrap gap-7">
+              {statusOrder.map((status) => {
+                const token = statusTokens[status];
+                const isActive = activeStatuses.includes(status);
+                return (
+                  <button
+                    key={status}
+                    type="button"
+                    onClick={() => toggleStatus(status)}
+                    className="flex items-center gap-2 title16 uppercase text-primary text-shadow-primary-10"
+                  >
+                    <div className="h-5 w-5 flex justify-center items-center border border-primary rounded">
+                      {isActive && (
+                        <span
+                          className="h-3 w-3 rounded bg-primary"
+                          aria-hidden
+                        />
+                      )}
+                    </div>
+                    <span>{token.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={resetFilters}
+            className="title16 uppercase text-primary text-shadow-primary-10"
+          >
+            Show all
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10">
+          {filtered.map((item) => {
+            const rarity = rarityTokens[item.rarity];
+            const status = statusTokens[item.status];
+            return (
+              <article key={item.id} className="relative flex flex-col">
+                <div className="flex flex-col items-center justify-between border border-border/90 bg-dark">
+                  <div className="relative h-28 w-28 my-3">
+                    <Image
+                      src={item.icon}
+                      alt={item.title}
+                      fill
+                      sizes="140px"
+                      className="object-contain"
+                      priority={item.rarity === "legendary"}
+                    />
+                  </div>
+                  <div
+                    className="w-full px-1 py-0.5 text-center"
+                    style={{
+                      backgroundColor: rarity.pill,
+                    }}
+                  >
+                    <p className="title16 !text-dark">{rarity.label}</p>
+                  </div>
+                </div>
+                <div className="py-3 text-center">
+                  <p className="title16 font-big font-semibold" style={{color: rarity.pill}}>{item.title}</p>
+                </div>
+              </article>
+            );
+          })}
+
+          {filtered.length === 0 ? (
+            <div className="col-span-full flex flex-col items-center justify-center gap-3 border border-white/10 bg-black/40 px-4 py-6 text-center text-white/80">
+              <p className="title16 font-big text-white">
+                No achievements in this filter.
+              </p>
+              <p className="text-[12px] uppercase tracking-[0.16em] text-info-light">
+                Relax the filters to see everything again.
+              </p>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="border border-primary px-3 py-1 text-[12px] font-big uppercase tracking-[0.18em] text-primary transition hover:bg-primary hover:text-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark"
+              >
+                Reset filters
+              </button>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -113,7 +113,7 @@ export default function ThemeSwitcher() {
         style={{ backgroundColor: activeColor }}
         aria-label="Toggle theme color"
       >
-        <MdPalette className="text-xl text-white" />
+        <MdPalette className="text-3xl text-white" />
         <span className="absolute -top-1 -right-1 inline-block h-3 w-3 rounded-full border border-black bg-white" />
       </button>
     </div>

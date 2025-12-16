@@ -7,6 +7,7 @@ import AppTabs from "./components/appTabs";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import LogsContent from "./components/logsContent";
 import BeginningContent from "./components/beginningContent";
+import AchievementsContent from "./components/achievementsContent";
 import { IoBluetooth, IoSettingsOutline } from "react-icons/io5";
 import bronz from "../../public/bronz.png";
 import gold from "../../public/gold.png";
@@ -23,8 +24,7 @@ const navTabs = [
   },
   {
     label: "Achievements",
-    content:
-      "Hard-won milestones, certifications, and shout-outs earned while leveling up the craft.",
+    content: <AchievementsContent />,
   },
   {
     label: "Creations",

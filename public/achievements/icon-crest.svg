@@ -1,0 +1,18 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#080405"/>
+  <circle cx="100" cy="100" r="82" stroke="#c75445" stroke-width="6" fill="none"/>
+  <g filter="url(#glow)">
+    <path d="M60 136c0-21 11-41 30-54 15-11 34-16 50-16l10 1-3 10c-4 13-14 26-31 37-18 12-37 19-56 22Z" fill="#4fe7d3"/>
+    <path d="M102 60c-10 0-21 6-27 15-8 12-8 28-4 39 5-6 11-12 18-17 12-8 26-13 38-15 0-3-1-6-3-9-5-8-13-13-22-13Z" fill="#0b2f2c"/>
+    <path d="M60 142c26 6 51 2 72-9 17-9 30-22 36-36-6 26-21 46-42 56-15 7-33 8-53 3l-13-4Z" fill="#4fe7d3"/>
+  </g>
+  <defs>
+    <filter id="glow" x="46" y="43" width="122" height="123" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

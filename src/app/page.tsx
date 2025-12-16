@@ -49,7 +49,7 @@ export default function Home() {
       <header className="flex h-24 items-center justify-between gap-4">
         <div className="flex items-center gap-11">
           <div className="flex items-baseline gap-2">
-            <span className="font-big title26 font-bold !text-slate ">48</span>
+            <span className="font-big title26 font-bold text-primary ">48</span>
             <span className="title16 font-big !text-white/60">Level</span>
           </div>
           <div className="flex items-center gap-3">
@@ -119,7 +119,7 @@ export default function Home() {
           </div>
 
           <div className="mt-auto">
-            <span className="block title18 !text-primary">Motto:</span>
+            <span className="block title18 text-primary">Motto:</span>
             <p className="title16 text-white/70">
               Saep enimis neque numquam recusandae laudantium.
             </p>

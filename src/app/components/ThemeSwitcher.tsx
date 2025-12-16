@@ -50,15 +50,15 @@ function applyPrimaryColor(color: string) {
   root.style.setProperty("--color-primary-10", `rgba(${r}, ${g}, ${b}, 0.1)`);
   root.style.setProperty(
     "--color-primary-glow-1",
-    `radial-gradient(circle at 15% 20%, rgba(${r}, ${g}, ${b}, 0.13), transparent 28%)`,
+    `radial-gradient(circle at 4% 98%, rgba(${r}, ${g}, ${b}, 0.3), transparent 10%)`,
   );
   root.style.setProperty(
     "--color-primary-glow-2",
-    `radial-gradient(circle at 85% 15%, rgba(${r}, ${g}, ${b}, 0.12), transparent 30%)`,
+    `radial-gradient(circle at 95% 0%, rgba(${r}, ${g}, ${b}, 0.3), transparent 10%)`,
   );
   root.style.setProperty(
     "--color-primary-glow-3",
-    `radial-gradient(circle at 50% 60%, rgba(${r}, ${g}, ${b}, 0.22), transparent 48%)`,
+    `radial-gradient(circle at 50% 50%, rgba(${r}, ${g}, ${b}, 0.25), transparent 50%)`,
   );
 }
 

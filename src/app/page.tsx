@@ -6,6 +6,7 @@ import Button from "./components/Button";
 import AppTabs from "./components/appTabs";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import LogsContent from "./components/logsContent";
+import BeginningContent from "./components/beginningContent";
 import { IoBluetooth, IoSettingsOutline } from "react-icons/io5";
 import bronz from "../../public/bronz.png";
 import gold from "../../public/gold.png";
@@ -14,8 +15,7 @@ import { CgCheckR, CgCloseR } from "react-icons/cg";
 const navTabs = [
   {
     label: "Beginning",
-    content:
-      "Blueprint sketches, rough drafts, and early experiments that set the tone for everything that follows.",
+    content: <BeginningContent />,
   },
   {
     label: "Logs",

@@ -38,77 +38,76 @@ const olderLogs = [
 
 export default function LogsContent() {
   return (
-    <div className="flex h-full flex-col gap-6 max-w-285 mx-auto">
-      <h1 className="text-center title18">Data Log Dump Initialized.</h1>
-
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center justify-between gap-3 bg-primary px-2">
-          <p className="font-big text-lg font-bold tracking-[0.2em] text-dark">
-            {overview.title}
-          </p>
-          <span className="title16 !text-dark">Date: {overview.date}</span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="title16">
-            Location:{" "}
-            <span className="text-info-light">{overview.location}</span>
-          </span>
-          <span className="title16">
-            Project Status:{" "}
-            <span className="text-info-light">{overview.status}</span>
-          </span>
-        </div>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        {sections.map((section) => (
-          <div
-            key={section.title}
-            className="flex h-full flex-col justify-between border border-white/15 bg-black px-5 py-4 shadow-[0_0_24px_rgba(0,0,0,0.35)]"
-          >
-            <div className="space-y-1">
-              <p className="font-big title18 font-bold text-primary">
-                {section.title}
-              </p>
-              <p className="title14 !text-info-light">{section.body}</p>
-            </div>
-            <button
-              type="button"
-              className="mt-2 w-max cursor-pointer text-sm tracking-widest text-primary transition uppercase hover:text-primary-70"
-            >
-              + Expand
-            </button>
+    <div className="h-full w-full overflow-y-auto px-4 py-10 sm:px-6 sm:py-12">
+      <div className="flex h-full flex-col gap-6 max-w-285 mx-auto">
+        <h1 className="text-center title18">Data Log Dump Initialized.</h1>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-primary px-2">
+            <p className="font-big text-lg font-bold tracking-[0.2em] text-dark">
+              {overview.title}
+            </p>
+            <span className="title16 !text-dark">Date: {overview.date}</span>
           </div>
-        ))}
-      </div>
-
-      <div className="flex justify-center">
-        <div className="w-full max-w-72 sm:max-w-80">
-          <Button
-            label="Preview Visual Records"
-            icon={<MdOutlineImage className="text-xl" />}
-            variant="outlined"
-            className="bg-transparent text-primary hover:border-primary-70"
-          />
+          <div className="flex flex-col gap-1">
+            <span className="title16">
+              Location:{" "}
+              <span className="text-info-light">{overview.location}</span>
+            </span>
+            <span className="title16">
+              Project Status:{" "}
+              <span className="text-info-light">{overview.status}</span>
+            </span>
+          </div>
         </div>
-      </div>
 
-      <div className="space-y-1 border-t border-white/10 pt-6">
-        <p className="title18">Older Logs:</p>
-        <div className="space-y-2">
-          {olderLogs.map((title) => (
+        <div className="grid gap-4 md:grid-cols-2">
+          {sections.map((section) => (
             <div
-              key={title}
-              className="flex items-center justify-between border border-primary px-2 py-1 text-primary"
+              key={section.title}
+              className="flex h-full flex-col justify-between border border-white/15 bg-black px-5 py-4 shadow-[0_0_24px_rgba(0,0,0,0.35)]"
             >
-              <h1 className="title18 font-big text-primary font-bold">
-                {title}
-              </h1>
-              <p className="title16 text-primary">
-                Date: {overview.date}
-              </p>
+              <div className="space-y-1">
+                <p className="font-big title18 font-bold text-primary">
+                  {section.title}
+                </p>
+                <p className="title14 !text-info-light">{section.body}</p>
+              </div>
+              <button
+                type="button"
+                className="mt-2 w-max cursor-pointer text-sm tracking-widest text-primary transition uppercase hover:text-primary-70"
+              >
+                + Expand
+              </button>
             </div>
           ))}
+        </div>
+
+        <div className="flex justify-center">
+          <div className="w-full max-w-72 sm:max-w-80">
+            <Button
+              label="Preview Visual Records"
+              icon={<MdOutlineImage className="text-xl" />}
+              variant="outlined"
+              className="bg-transparent text-primary hover:border-primary-70"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-1 border-t border-white/10 pt-6">
+          <p className="title18">Older Logs:</p>
+          <div className="space-y-2">
+            {olderLogs.map((title) => (
+              <div
+                key={title}
+                className="flex items-center justify-between border border-primary px-2 py-1 text-primary"
+              >
+                <h1 className="title18 font-big text-primary font-bold">
+                  {title}
+                </h1>
+                <p className="title16 text-primary">Date: {overview.date}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

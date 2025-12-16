@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 
 type AchievementStatus = "achieved" | "in-progress" | "todo";
-type AchievementRarity = "legendary" | "epic";
+type AchievementRarity = "legendary" | "epic" | "rare" | "uncommon";
 
 type Achievement = {
   id: string;
@@ -39,17 +39,31 @@ const statusOrder: AchievementStatus[] = ["achieved", "in-progress", "todo"];
 
 const rarityTokens: Record<
   AchievementRarity,
-  { label: string; pill: string; text: string }
+  { label: string; pill: string; text: string; glow: string }
 > = {
   legendary: {
     label: "Legendary",
     pill: "var(--color-warning-90)",
     text: "#0a0606",
+    glow: "rgba(212, 169, 68, 0.6)",
   },
   epic: {
     label: "Epic",
-    pill: "var(--color-primary-20)",
+    pill: "var(--color-primary-50)",
     text: "var(--color-white)",
+    glow: "rgba(232, 74, 74, 0.55)",
+  },
+  rare: {
+    label: "Rare",
+    pill: "var(--color-secondary-90)",
+    text: "var(--color-white)",
+    glow: "rgba(66, 157, 209, 0.55)",
+  },
+  uncommon: {
+    label: "Uncommon",
+    pill: "var(--color-success-90)",
+    text: "#061308",
+    glow: "rgba(93, 226, 106, 0.55)",
   },
 };
 
@@ -72,7 +86,7 @@ const achievements: Achievement[] = [
     id: "oss-plugin",
     title: "Developed my open source plugin",
     status: "achieved",
-    rarity: "epic",
+    rarity: "rare",
     icon: "/achievements/icon-blade.svg",
   },
   {
@@ -93,7 +107,7 @@ const achievements: Achievement[] = [
     id: "speed-demon",
     title: '"Speed demon"',
     status: "in-progress",
-    rarity: "epic",
+    rarity: "rare",
     icon: "/achievements/icon-crest.svg",
   },
   {
@@ -108,28 +122,28 @@ const achievements: Achievement[] = [
     id: "accessibility",
     title: "Accessibility advocate",
     status: "todo",
-    rarity: "epic",
+    rarity: "uncommon",
     icon: "/achievements/icon-orbit.svg",
   },
   {
     id: "browser-compat",
     title: '"Browser compatibility"',
     status: "in-progress",
-    rarity: "epic",
+    rarity: "rare",
     icon: "/achievements/icon-crest.svg",
   },
   {
     id: "worth-noting",
     title: "Additional worth noting event",
     status: "todo",
-    rarity: "epic",
+    rarity: "uncommon",
     icon: "/achievements/icon-crest.svg",
   },
   {
     id: "code-quality",
     title: "Code quality guardian",
     status: "in-progress",
-    rarity: "epic",
+    rarity: "rare",
     icon: "/achievements/icon-blade.svg",
   },
   {
@@ -143,14 +157,14 @@ const achievements: Achievement[] = [
     id: "worth-noting-2",
     title: "Additional worth noting event",
     status: "todo",
-    rarity: "epic",
+    rarity: "uncommon",
     icon: "/achievements/icon-orbit.svg",
   },
   {
     id: "ui-polish",
     title: "UI polish sprint",
     status: "todo",
-    rarity: "epic",
+    rarity: "uncommon",
     icon: "/achievements/icon-mask.svg",
   },
 ];
@@ -228,7 +242,13 @@ export default function AchievementsContent() {
             const status = statusTokens[item.status];
             return (
               <article key={item.id} className="relative flex flex-col">
-                <div className="flex flex-col items-center justify-between border border-border/90 bg-dark">
+                <div
+                  className="flex flex-col items-center justify-between border border-border/90 bg-dark transition-shadow duration-200 hover:shadow-[0_0_22px_var(--rarity-glow)] hover:border-[var(--rarity-border)]"
+                  style={{
+                    ["--rarity-border" as string]: rarity.pill,
+                    ["--rarity-glow" as string]: rarity.glow,
+                  }}
+                >
                   <div className="relative h-28 w-28 my-3">
                     <Image
                       src={item.icon}
@@ -240,7 +260,7 @@ export default function AchievementsContent() {
                     />
                   </div>
                   <div
-                    className="w-full px-1 py-0.5 text-center"
+                    className="flex w-full items-center justify-center px-1 py-0.5 text-center"
                     style={{
                       backgroundColor: rarity.pill,
                     }}
@@ -249,12 +269,21 @@ export default function AchievementsContent() {
                   </div>
                 </div>
                 <div className="py-3 text-center">
-                  <p className="title16 font-big font-semibold" style={{color: rarity.pill}}>{item.title}</p>
+                  <p
+                    className="title16 font-big font-semibold"
+                    style={{ color: rarity.pill }}
+                  >
+                    {item.title}
+                  </p>
+                  {item.note ? (
+                    <p className="text-xs uppercase leading-normal tracking-widest text-info-light">
+                      {item.note}
+                    </p>
+                  ) : null}
                 </div>
               </article>
             );
           })}
-
           {filtered.length === 0 ? (
             <div className="col-span-full flex flex-col items-center justify-center gap-3 border border-white/10 bg-black/40 px-4 py-6 text-center text-white/80">
               <p className="title16 font-big text-white">

@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useMemo, useState } from "react";
+import Button from "./Button";
 
 type AchievementStatus = "achieved" | "in-progress" | "todo";
 type AchievementRarity = "legendary" | "epic" | "rare" | "uncommon";
@@ -35,6 +36,11 @@ const statusTokens: Record<
 };
 
 const statusOrder: AchievementStatus[] = ["achieved", "in-progress", "todo"];
+const statusPriority: Record<AchievementStatus, number> = {
+  achieved: 0,
+  "in-progress": 1,
+  todo: 2,
+};
 
 const rarityTokens: Record<
   AchievementRarity,
@@ -169,7 +175,10 @@ export default function AchievementsContent() {
   ]);
 
   const filtered = useMemo(
-    () => achievements.filter((item) => activeStatuses.includes(item.status)),
+    () =>
+      achievements
+        .filter((item) => activeStatuses.includes(item.status))
+        .sort((a, b) => statusPriority[a.status] - statusPriority[b.status]),
     [activeStatuses]
   );
 
@@ -228,15 +237,27 @@ export default function AchievementsContent() {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10">
+        <div className="flex flex-wrap items-stretch gap-4">
           {filtered.map((item) => {
             const rarity = rarityTokens[item.rarity];
             const status = statusTokens[item.status];
             const iconSrc = rarityIcon[item.rarity];
+            const isInProgress = item.status === "in-progress";
+            const isTodo = item.status === "todo";
+            const isMuted = isInProgress || isTodo;
+
+            const cardHoverClasses = isMuted
+              ? ""
+              : "hover:shadow-[0_0_22px_var(--rarity-glow)] hover:border-[var(--rarity-border)]";
+
             return (
-              <article key={item.id} className="relative flex flex-col">
+              <article
+                key={item.id}
+                className="relative flex flex-col w-full max-w-43.75"
+                style={{ opacity: isMuted ? 0.5 : 1 }}
+              >
                 <div
-                  className="flex flex-col items-center justify-between border border-border/90 bg-dark transition-shadow duration-200 hover:shadow-[0_0_22px_var(--rarity-glow)] hover:border-[var(--rarity-border)]"
+                  className={`flex flex-col items-center justify-between border border-border/90 bg-dark transition-shadow duration-200 ${cardHoverClasses}`}
                   style={{
                     ["--rarity-border" as string]: rarity.pill,
                     ["--rarity-glow" as string]: rarity.glow,
@@ -268,6 +289,16 @@ export default function AchievementsContent() {
                   >
                     {item.title}
                   </p>
+                  {isTodo ? (
+                    <p className="text-xs uppercase leading-normal tracking-widest text-white">
+                      In queue
+                    </p>
+                  ) : null}
+                  {isInProgress ? (
+                    <p className="text-xs uppercase leading-normal tracking-widest text-info-light">
+                      In progress
+                    </p>
+                  ) : null}
                   {item.note ? (
                     <p className="text-xs uppercase leading-normal tracking-widest text-info-light">
                       {item.note}
@@ -278,20 +309,19 @@ export default function AchievementsContent() {
             );
           })}
           {filtered.length === 0 ? (
-            <div className="col-span-full flex flex-col items-center justify-center gap-3 border border-white/10 bg-black/40 px-4 py-6 text-center text-white/80">
-              <p className="title16 font-big text-white">
+            <div className="col-span-full flex flex-col items-center justify-center gap-2 w-full min-h-52 border border-border/90 bg-black/40 px-4 py-6 text-center">
+              <h1 className="text-2xl font-big font-bold text-primary">
                 No achievements in this filter.
-              </p>
-              <p className="text-[12px] uppercase tracking-[0.16em] text-info-light">
+              </h1>
+              <p className="title16 !text-white/70">
                 Relax the filters to see everything again.
               </p>
-              <button
-                type="button"
+              <Button
+                label="Reset filters"
                 onClick={resetFilters}
-                className="border border-primary px-3 py-1 text-[12px] font-big uppercase tracking-[0.18em] text-primary transition hover:bg-primary hover:text-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark"
-              >
-                Reset filters
-              </button>
+                className="w-max mt-5"
+                variant="outlined"
+              />
             </div>
           ) : null}
         </div>

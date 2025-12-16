@@ -1,0 +1,31 @@
+<svg width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="rr-core" cx="50%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#071723"/>
+      <stop offset="55%" stop-color="#040b10"/>
+      <stop offset="100%" stop-color="#020507"/>
+    </radialGradient>
+    <linearGradient id="rr-ice" x1="10%" y1="0%" x2="90%" y2="90%">
+      <stop offset="0%" stop-color="#9cd9ff"/>
+      <stop offset="40%" stop-color="#429dd1"/>
+      <stop offset="100%" stop-color="#1c5a83"/>
+    </linearGradient>
+    <filter id="rr-glow" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="320" height="320" fill="#030608"/>
+  <rect width="320" height="320" fill="url(#rr-core)" opacity="0.9"/>
+  <circle cx="160" cy="160" r="128" stroke="#429dd1" stroke-width="6" opacity="0.7"/>
+  <circle cx="160" cy="160" r="110" stroke="#9cd9ff" stroke-width="2" opacity="0.5"/>
+
+  <g filter="url(#rr-glow)">
+    <path d="M94 179c5-17 17-32 34-43 14-9 30-14 47-14 16 0 33 5 47 14 17 11 29 26 34 43-23-15-48-22-81-22-33 0-58 7-81 22Z" fill="url(#rr-ice)"/>
+    <path d="M108 214c10 9 24 15 40 18 20 4 39 1 56-7 13-7 24-17 30-29-19 8-39 11-60 11-21 0-41-3-60-11-2 6-4 12-6 18Z" fill="url(#rr-ice)"/>
+  </g>
+</svg>

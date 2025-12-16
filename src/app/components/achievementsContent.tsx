@@ -10,7 +10,6 @@ type Achievement = {
   title: string;
   status: AchievementStatus;
   rarity: AchievementRarity;
-  icon: string;
   note?: string;
 };
 
@@ -67,55 +66,55 @@ const rarityTokens: Record<
   },
 };
 
+const rarityIcon: Record<AchievementRarity, string> = {
+  legendary: "/achievements/rarity-legendary.svg",
+  epic: "/achievements/rarity-epic.svg",
+  rare: "/achievements/rarity-rare.svg",
+  uncommon: "/achievements/rarity-uncommon.svg",
+};
+
 const achievements: Achievement[] = [
   {
     id: "legendary-stars",
     title: "1000 stars on my project",
     status: "achieved",
     rarity: "legendary",
-    icon: "/achievements/icon-mask.svg",
   },
   {
     id: "personal-website",
     title: "Release personal website",
     status: "achieved",
     rarity: "epic",
-    icon: "/achievements/icon-blade.svg",
   },
   {
     id: "oss-plugin",
     title: "Developed my open source plugin",
     status: "achieved",
     rarity: "rare",
-    icon: "/achievements/icon-blade.svg",
   },
   {
     id: "markup-master",
     title: "Master of markup",
     status: "achieved",
     rarity: "epic",
-    icon: "/achievements/icon-orbit.svg",
   },
   {
     id: "pixel-perfect-1",
     title: "Pixel-perfect perfectionist",
     status: "achieved",
     rarity: "epic",
-    icon: "/achievements/icon-orbit.svg",
   },
   {
     id: "speed-demon",
     title: '"Speed demon"',
     status: "in-progress",
     rarity: "rare",
-    icon: "/achievements/icon-crest.svg",
   },
   {
     id: "pixel-perfect-2",
     title: "Pixel-perfect perfectionist",
     status: "achieved",
     rarity: "epic",
-    icon: "/achievements/icon-orbit.svg",
     note: "Alternate skin unlocked",
   },
   {
@@ -123,49 +122,42 @@ const achievements: Achievement[] = [
     title: "Accessibility advocate",
     status: "todo",
     rarity: "uncommon",
-    icon: "/achievements/icon-orbit.svg",
   },
   {
     id: "browser-compat",
     title: '"Browser compatibility"',
     status: "in-progress",
     rarity: "rare",
-    icon: "/achievements/icon-crest.svg",
   },
   {
     id: "worth-noting",
     title: "Additional worth noting event",
     status: "todo",
     rarity: "uncommon",
-    icon: "/achievements/icon-crest.svg",
   },
   {
     id: "code-quality",
     title: "Code quality guardian",
     status: "in-progress",
     rarity: "rare",
-    icon: "/achievements/icon-blade.svg",
   },
   {
     id: "milestone",
     title: "Another awesome milestone",
     status: "achieved",
     rarity: "epic",
-    icon: "/achievements/icon-crest.svg",
   },
   {
     id: "worth-noting-2",
     title: "Additional worth noting event",
     status: "todo",
     rarity: "uncommon",
-    icon: "/achievements/icon-orbit.svg",
   },
   {
     id: "ui-polish",
     title: "UI polish sprint",
     status: "todo",
     rarity: "uncommon",
-    icon: "/achievements/icon-mask.svg",
   },
 ];
 
@@ -240,6 +232,7 @@ export default function AchievementsContent() {
           {filtered.map((item) => {
             const rarity = rarityTokens[item.rarity];
             const status = statusTokens[item.status];
+            const iconSrc = rarityIcon[item.rarity];
             return (
               <article key={item.id} className="relative flex flex-col">
                 <div
@@ -251,7 +244,7 @@ export default function AchievementsContent() {
                 >
                   <div className="relative h-28 w-28 my-3">
                     <Image
-                      src={item.icon}
+                      src={iconSrc}
                       alt={item.title}
                       fill
                       sizes="140px"

@@ -1,0 +1,31 @@
+<svg width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="ep-core" cx="50%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#220609"/>
+      <stop offset="55%" stop-color="#0a0305"/>
+      <stop offset="100%" stop-color="#030203"/>
+    </radialGradient>
+    <linearGradient id="ep-crimson" x1="15%" y1="0%" x2="85%" y2="90%">
+      <stop offset="0%" stop-color="#ff8c8c"/>
+      <stop offset="35%" stop-color="#e84a4a"/>
+      <stop offset="100%" stop-color="#8f1c1c"/>
+    </linearGradient>
+    <filter id="ep-glow" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="320" height="320" fill="#050203"/>
+  <rect width="320" height="320" fill="url(#ep-core)" opacity="0.9"/>
+  <circle cx="160" cy="160" r="128" stroke="#e84a4a" stroke-width="6" opacity="0.7"/>
+  <circle cx="160" cy="160" r="110" stroke="#ff8c8c" stroke-width="2" opacity="0.4"/>
+
+  <g filter="url(#ep-glow)">
+    <path d="M109 206c-7-16-6-34 2-52 8-18 24-36 45-48 20 12 36 30 44 48 8 18 9 36 2 52l-7-5c-8-6-17-10-26-11-6-1-12 0-18 2l-6 2-6-2c-6-2-12-3-18-2-9 1-18 5-26 11l-8 5Z" fill="url(#ep-crimson)"/>
+    <path d="M125 208c-4 3-7 7-9 11-3 7-3 15 1 21 4 7 12 12 22 12 12 0 21-7 26-17l4-8 4 8c5 10 14 17 26 17 9 0 17-5 21-12 4-6 5-14 2-21-2-4-5-8-9-11-9 2-19 1-28-2-7-3-12-6-16-9-4 3-9 6-16 9-9 3-19 4-28 2Z" fill="url(#ep-crimson)"/>
+  </g>
+</svg>

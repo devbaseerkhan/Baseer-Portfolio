@@ -48,25 +48,25 @@ const rarityTokens: Record<
 > = {
   legendary: {
     label: "Legendary",
-    pill: "var(--color-warning-90)",
+    pill: "#d4a944",
     text: "#0a0606",
     glow: "rgba(212, 169, 68, 0.6)",
   },
   epic: {
     label: "Epic",
-    pill: "var(--color-primary-50)",
+    pill: "#e84a4a",
     text: "var(--color-white)",
     glow: "rgba(232, 74, 74, 0.55)",
   },
   rare: {
     label: "Rare",
-    pill: "var(--color-secondary-90)",
+    pill: "#429dd1",
     text: "var(--color-white)",
     glow: "rgba(66, 157, 209, 0.55)",
   },
   uncommon: {
     label: "Uncommon",
-    pill: "var(--color-success-90)",
+    pill: "#5de26a",
     text: "#061308",
     glow: "rgba(93, 226, 106, 0.55)",
   },

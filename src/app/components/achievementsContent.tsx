@@ -211,6 +211,54 @@ export default function AchievementsContent() {
     [activeStatuses]
   );
 
+  const progressStats = useMemo(() => {
+    const totalCount = achievements.length;
+    const achievedCount = achievements.filter(
+      (item) => item.status === "achieved"
+    ).length;
+    const inProgressCount = achievements.filter(
+      (item) => item.status === "in-progress"
+    ).length;
+    const todoCount = achievements.filter(
+      (item) => item.status === "todo"
+    ).length;
+
+    const numeratorByStatus: Record<AchievementStatus, number> = {
+      achieved: achievedCount,
+      "in-progress": inProgressCount,
+      todo: todoCount,
+    };
+
+    const isSingle = activeStatuses.length === 1;
+    const isAll = activeStatuses.length === statusOrder.length;
+
+    const numerator = isSingle
+      ? numeratorByStatus[activeStatuses[0]]
+      : isAll
+      ? achievedCount
+      : activeStatuses.reduce(
+          (acc, status) => acc + numeratorByStatus[status],
+          0
+        );
+
+    const completionPercent =
+      totalCount === 0 ? 0 : Math.round((numerator / totalCount) * 100);
+
+    const label = isSingle
+      ? statusTokens[activeStatuses[0]].label
+      : isAll
+      ? "Progress"
+      : "Selected";
+
+    return {
+      totalCount,
+      achievedCount,
+      numerator,
+      completionPercent,
+      label,
+    };
+  }, [activeStatuses]);
+
   const toggleStatus = (status: AchievementStatus) => {
     setActiveStatuses((prev) =>
       prev.includes(status)
@@ -293,6 +341,74 @@ export default function AchievementsContent() {
           </div>
         </div>
       </article>
+    );
+  };
+
+  const renderProgressPanel = () => {
+    const radius = 58;
+    const circumference = 2 * Math.PI * radius;
+    const dashOffset =
+      circumference * (1 - progressStats.completionPercent / 100);
+
+    return (
+      <aside className="flex flex-col gap-4 sticky top-0">
+        <div
+          className="flex flex-col items-center gap-4 rounded-sm border border-primary px-4 py-6"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(232, 74, 74, 0.14) 0%, rgba(232, 74, 74, 0) 100%)",
+          }}
+        >
+          <div className="relative h-36 w-36">
+            <svg
+              viewBox="0 0 140 140"
+              role="img"
+              aria-label={`${progressStats.label} ${progressStats.numerator} of ${progressStats.totalCount}`}
+              className="h-full w-full"
+            >
+              <circle
+                cx="70"
+                cy="70"
+                r={radius}
+                fill="none"
+                stroke="rgba(232, 74, 74, 0.2)"
+                strokeWidth="10"
+              />
+              <circle
+                cx="70"
+                cy="70"
+                r={radius}
+                fill="none"
+                stroke="var(--color-primary)"
+                strokeWidth="10"
+                strokeLinecap="round"
+                strokeDasharray={`${circumference} ${circumference}`}
+                strokeDashoffset={dashOffset}
+                transform="rotate(-90 70 70)"
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="title26 font-big font-bold text-primary">
+                {progressStats.numerator}/{progressStats.totalCount}
+              </span>
+            </div>
+          </div>
+          <p className="title14 !text-info-light tracking-[0.18em]">
+            {progressStats.label}
+          </p>
+        </div>
+
+        <p className="title16 !text-info-light leading-relaxed">
+          I have created a set of achievements for myself and I use this page to
+          track them.
+        </p>
+        <p className="title16 !text-info-light leading-relaxed">
+          If you want to give me a challenge and rate it, please feel free to
+          submit it with the button below!
+        </p>
+
+        <Button label="Challenge me" variant="outlined" className="mt-2" />
+      </aside>
     );
   };
 
@@ -450,39 +566,44 @@ export default function AchievementsContent() {
               ) : null}
             </div>
           ) : (
-            <div className="flex flex-col gap-3">
-              {statusOrder.map((statusKey) => {
-                const section = filtered.filter(
-                  (item) => item.status === statusKey
-                );
-                if (section.length === 0) return null;
-                return (
-                  <div key={statusKey} className="space-y-2">
-                    <p className="title16 uppercase tracking-[0.16em] text-info-light">
-                      {statusTokens[statusKey].label}
-                    </p>
-                    <div className="space-y-3">
-                      {section.map((item) => renderListCard(item))}
+            <div className="w-full max-w-205 mx-auto">
+              <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] relative">
+                <div className="flex flex-col gap-3">
+                  {statusOrder.map((statusKey) => {
+                    const section = filtered.filter(
+                      (item) => item.status === statusKey
+                    );
+                    if (section.length === 0) return null;
+                    return (
+                      <div key={statusKey} className="space-y-2">
+                        <p className="title16 uppercase tracking-[0.16em] text-info-light">
+                          {statusTokens[statusKey].label}
+                        </p>
+                        <div className="space-y-3">
+                          {section.map((item) => renderListCard(item))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {filtered.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center gap-2 w-full min-h-52 border border-border/90 bg-black/40 px-4 py-6 text-center">
+                      <h1 className="text-2xl font-big font-bold text-primary">
+                        No achievements in this filter.
+                      </h1>
+                      <p className="title16 !text-white/70">
+                        Relax the filters to see everything again.
+                      </p>
+                      <Button
+                        label="Reset filters"
+                        onClick={resetFilters}
+                        className="w-max mt-5"
+                        variant="outlined"
+                      />
                     </div>
-                  </div>
-                );
-              })}
-              {filtered.length === 0 ? (
-                <div className="flex flex-col items-center justify-center gap-2 w-full min-h-52 border border-border/90 bg-black/40 px-4 py-6 text-center">
-                  <h1 className="text-2xl font-big font-bold text-primary">
-                    No achievements in this filter.
-                  </h1>
-                  <p className="title16 !text-white/70">
-                    Relax the filters to see everything again.
-                  </p>
-                  <Button
-                    label="Reset filters"
-                    onClick={resetFilters}
-                    className="w-max mt-5"
-                    variant="outlined"
-                  />
+                  ) : null}
                 </div>
-              ) : null}
+                <div className="sticky top-0">{renderProgressPanel()}</div>
+              </div>
             </div>
           )}
         </div>

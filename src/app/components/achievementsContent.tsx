@@ -259,6 +259,14 @@ export default function AchievementsContent() {
     };
   }, [activeStatuses]);
 
+  const progressVisuals = useMemo(() => {
+    return {
+      background:
+        "linear-gradient(180deg, rgba(var(--color-primary-rgb, 232, 74, 74), 0.14) 0%, rgba(var(--color-primary-rgb, 232, 74, 74), 0) 100%)",
+      tint: "var(--color-primary)",
+    };
+  }, []);
+
   const toggleStatus = (status: AchievementStatus) => {
     setActiveStatuses((prev) =>
       prev.includes(status)
@@ -354,10 +362,7 @@ export default function AchievementsContent() {
       <aside className="flex flex-col gap-4 sticky top-0">
         <div
           className="flex flex-col items-center gap-4 rounded-sm border border-primary px-4 py-6"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(232, 74, 74, 0.14) 0%, rgba(232, 74, 74, 0) 100%)",
-          }}
+          style={{ background: progressVisuals.background }}
         >
           <div className="relative h-36 w-36">
             <svg
@@ -567,7 +572,8 @@ export default function AchievementsContent() {
             </div>
           ) : (
             <div className="w-full max-w-205 mx-auto">
-              <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] relative">
+              <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)] relative">
+                <div className="sticky top-0">{renderProgressPanel()}</div>
                 <div className="flex flex-col gap-3">
                   {statusOrder.map((statusKey) => {
                     const section = filtered.filter(
@@ -602,7 +608,6 @@ export default function AchievementsContent() {
                     </div>
                   ) : null}
                 </div>
-                <div className="sticky top-0">{renderProgressPanel()}</div>
               </div>
             </div>
           )}

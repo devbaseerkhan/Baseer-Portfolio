@@ -42,12 +42,17 @@ function applyPrimaryColor(color: string) {
   const { r, g, b } = hexToRgb(color);
 
   root.style.setProperty("--color-primary", color);
+  root.style.setProperty("--color-primary-rgb", `${r}, ${g}, ${b}`);
   root.style.setProperty("--color-primary-90", `rgba(${r}, ${g}, ${b}, 0.9)`);
   root.style.setProperty("--color-primary-70", `rgba(${r}, ${g}, ${b}, 0.7)`);
   root.style.setProperty("--color-primary-50", `rgba(${r}, ${g}, ${b}, 0.5)`);
   root.style.setProperty("--color-primary-30", `rgba(${r}, ${g}, ${b}, 0.3)`);
   root.style.setProperty("--color-primary-20", `rgba(${r}, ${g}, ${b}, 0.2)`);
   root.style.setProperty("--color-primary-10", `rgba(${r}, ${g}, ${b}, 0.1)`);
+  root.style.setProperty(
+    "--color-primary-linear",
+    `linear-gradient(270deg, rgba(${r}, ${g}, ${b}, 0.14) 0%, rgba(${r}, ${g}, ${b}, 0) 100%)`,
+  );
   root.style.setProperty(
     "--color-primary-glow-1",
     `radial-gradient(circle at 4% 98%, rgba(${r}, ${g}, ${b}, 0.3), transparent 10%)`,

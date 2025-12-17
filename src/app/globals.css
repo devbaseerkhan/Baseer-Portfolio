@@ -3,6 +3,7 @@
 
 @theme inline {
   --color-primary: #e84a4a;
+  --color-primary-rgb: 232, 74, 74;
   --color-primary-90: rgba(232, 74, 74, 0.9);
   --color-primary-70: rgba(232, 74, 74, 0.7);
   --color-primary-50: rgba(232, 74, 74, 0.5);

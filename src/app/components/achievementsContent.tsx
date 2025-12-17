@@ -11,6 +11,8 @@ type Achievement = {
   title: string;
   status: AchievementStatus;
   rarity: AchievementRarity;
+  description?: string;
+  achievedOn?: string;
   note?: string;
 };
 
@@ -44,31 +46,35 @@ const statusPriority: Record<AchievementStatus, number> = {
 
 const rarityTokens: Record<
   AchievementRarity,
-  { label: string; pill: string; text: string; glow: string }
+  { label: string; pill: string; text: string; glow: string; bgLinear?: string }
 > = {
   legendary: {
     label: "Legendary",
     pill: "#d4a944",
     text: "#0a0606",
     glow: "rgba(212, 169, 68, 0.6)",
+    bgLinear: "var(--color-warning-linear)",
   },
   epic: {
     label: "Epic",
     pill: "#e84a4a",
     text: "var(--color-white)",
     glow: "rgba(232, 74, 74, 0.55)",
+    bgLinear: "var(--color-primary-linear)",
   },
   rare: {
     label: "Rare",
     pill: "#429dd1",
     text: "var(--color-white)",
     glow: "rgba(66, 157, 209, 0.55)",
+    bgLinear: "var(--color-secondary-linear)",
   },
   uncommon: {
     label: "Uncommon",
     pill: "#5de26a",
     text: "#061308",
     glow: "rgba(93, 226, 106, 0.55)",
+    bgLinear: "var(--color-success-linear)",
   },
 };
 
@@ -85,42 +91,56 @@ const achievements: Achievement[] = [
     title: "1000 stars on my project",
     status: "achieved",
     rarity: "legendary",
+    achievedOn: "14 / 02 / 2022",
+    description:
+      "I have contributed to Gutenberg, Moment.js and React repositories in GitHub.",
   },
   {
     id: "personal-website",
     title: "Release personal website",
     status: "achieved",
     rarity: "epic",
+    achievedOn: "14 / 02 / 2022",
+    description:
+      "The site you are looking at right now — yes, I did it! And it took me a few months.",
   },
   {
     id: "oss-plugin",
     title: "Developed my open source plugin",
     status: "achieved",
     rarity: "rare",
+    achievedOn: "14 / 02 / 2022",
+    description:
+      "Created a JS library for managing absolute positioned elements.",
   },
   {
     id: "markup-master",
     title: "Master of markup",
     status: "achieved",
     rarity: "epic",
+    description:
+      "Ship semantic, accessible HTML paired with efficient styling systems.",
   },
   {
     id: "pixel-perfect-1",
     title: "Pixel-perfect perfectionist",
     status: "achieved",
     rarity: "epic",
+    description: "Match comps to the pixel while preserving responsive sanity.",
   },
   {
     id: "speed-demon",
     title: '"Speed demon"',
     status: "in-progress",
     rarity: "rare",
+    description: "Make builds, bundles, and runtime interactions feel instant.",
   },
   {
     id: "pixel-perfect-2",
     title: "Pixel-perfect perfectionist",
     status: "achieved",
     rarity: "epic",
+    description: "Alternate skin unlocked.",
     note: "Alternate skin unlocked",
   },
   {
@@ -128,42 +148,50 @@ const achievements: Achievement[] = [
     title: "Accessibility advocate",
     status: "todo",
     rarity: "uncommon",
+    description: "AA+ compliance, full keyboard flows, screen reader parity.",
   },
   {
     id: "browser-compat",
     title: '"Browser compatibility"',
     status: "in-progress",
     rarity: "rare",
+    description: "Polyfills, graceful degradation, and evergreen builds.",
   },
   {
     id: "worth-noting",
     title: "Additional worth noting event",
     status: "todo",
     rarity: "uncommon",
+    description: "Queued milestone in the next sprint cycle.",
   },
   {
     id: "code-quality",
     title: "Code quality guardian",
     status: "in-progress",
     rarity: "rare",
+    description: "Static analysis, linting, testing, and DX guardrails.",
   },
   {
     id: "milestone",
     title: "Another awesome milestone",
     status: "achieved",
     rarity: "epic",
+    achievedOn: "14 / 02 / 2022",
+    description: "Another major project landed with polish.",
   },
   {
     id: "worth-noting-2",
     title: "Additional worth noting event",
     status: "todo",
     rarity: "uncommon",
+    description: "Placeholder for the next notable win.",
   },
   {
     id: "ui-polish",
     title: "UI polish sprint",
     status: "todo",
     rarity: "uncommon",
+    description: "Micro-interactions, layout cleanup, and motion tweaks.",
   },
 ];
 
@@ -173,6 +201,7 @@ export default function AchievementsContent() {
     "in-progress",
     "todo",
   ]);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const filtered = useMemo(
     () =>
@@ -193,137 +222,269 @@ export default function AchievementsContent() {
   const resetFilters = () =>
     setActiveStatuses(["achieved", "in-progress", "todo"]);
 
-  return (
-    <div className="h-full w-full overflow-y-auto px-4 py-10 sm:px-6 lg:px-9 sm:py-12">
-      <div className="flex h-full flex-col gap-6">
-        <div className="flex flex-col items-center gap-2">
-          <h1 className="title18 text-center">Achievements</h1>
+  const renderListCard = (item: Achievement) => {
+    const rarity = rarityTokens[item.rarity];
+    const status = statusTokens[item.status];
+    const iconSrc = rarityIcon[item.rarity];
+    const isInProgress = item.status === "in-progress";
+    const isTodo = item.status === "todo";
+    const isMuted = isInProgress || isTodo;
+    const statusLabel =
+      isTodo || isInProgress ? (isTodo ? "In queue" : "In progress") : null;
+    const cardHoverClasses = isMuted
+      ? ""
+      : "hover:shadow-[0_0_22px_var(--rarity-glow)] hover:border-[var(--rarity-border)]";
+    return (
+      <article
+        key={item.id}
+        className={`relative flex w-full border border-border/90 rounded-sm ${cardHoverClasses}`}
+        style={{
+          opacity: isMuted ? 0.5 : 1,
+          ["--rarity-border" as string]: rarity.pill,
+          ["--rarity-glow" as string]: rarity.glow,
+          background: rarity.bgLinear,
+        }}
+      >
+        <div className="flex flex-col items-center justify-between border-r border-border/70">
+          <div className="relative h-28 w-28">
+            <Image
+              src={iconSrc}
+              alt={item.title}
+              fill
+              sizes="140px"
+              className="object-contain"
+              priority={item.rarity === "legendary"}
+            />
+          </div>
+          <div
+            className={`flex w-full items-center justify-center px-1 py-0.5 text-center transition-shadow duration-200 ${cardHoverClasses}`}
+            style={{
+              backgroundColor: rarity.pill,
+            }}
+          >
+            <p className="title16 !text-dark">{rarity.label}</p>
+          </div>
         </div>
+        <div className="w-full flex flex-col justify-between">
+          <div className="p-5">
+            <p
+              className="title18 font-big font-semibold"
+              style={{ color: rarity.pill }}
+            >
+              {item.title}
+            </p>
+            {item.description ? (
+              <p className="title16 !text-info-light">{item.description}</p>
+            ) : null}
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-primary bg-primary-10 px-2 py-2">
-          <div className="flex items-center gap-7">
-            <span className="title16 !text-info-light">Filter:</span>
-            <div className="flex flex-wrap gap-7">
-              {statusOrder.map((status) => {
-                const token = statusTokens[status];
-                const isActive = activeStatuses.includes(status);
-                return (
+            {item.note ? (
+              <p className="text-xs uppercase leading-normal tracking-widest text-info-light">
+                {item.note}
+              </p>
+            ) : null}
+          </div>
+          <div
+            className="w-full px-5 py-1 flex items-center"
+            style={{ background: rarity.bgLinear }}
+          >
+            <p className="title12">
+              {item.achievedOn ? `Achieved: ${item.achievedOn}` : status.label}
+            </p>
+          </div>
+        </div>
+      </article>
+    );
+  };
+
+  return (
+    <div className="h-full w-full overflow-hidden pt-10 sm:pt-12">
+      <div className="flex h-full flex-col gap-6">
+        <div className="flex flex-col gap-6 px-4 sm:px-6 lg:px-9">
+          <div className="flex flex-col items-center gap-2">
+            <h1 className="title18 text-center">Achievements</h1>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-primary bg-primary-10 px-2 py-2">
+            <div className="flex items-center gap-5">
+              <span className="title16 !text-info-light">Filter:</span>
+              <div className="flex flex-wrap gap-4">
+                {statusOrder.map((status) => {
+                  const token = statusTokens[status];
+                  const isActive = activeStatuses.includes(status);
+                  return (
+                    <button
+                      key={status}
+                      type="button"
+                      onClick={() => toggleStatus(status)}
+                      className="flex items-center gap-2 title16 uppercase text-primary text-shadow-primary-10"
+                    >
+                      <div className="h-5 w-5 flex justify-center items-center border border-primary rounded">
+                        {isActive && (
+                          <span
+                            className="h-3 w-3 rounded bg-primary"
+                            aria-hidden
+                          />
+                        )}
+                      </div>
+                      <span>{token.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="flex rounded border border-primary">
+                {(["grid", "list"] as const).map((mode) => (
                   <button
-                    key={status}
+                    key={mode}
                     type="button"
-                    onClick={() => toggleStatus(status)}
-                    className="flex items-center gap-2 title16 uppercase text-primary text-shadow-primary-10"
+                    onClick={() => setViewMode(mode)}
+                    className={`px-3 py-1 text-sm uppercase tracking-[0.14em] font-big font-bold transition ${
+                      viewMode === mode
+                        ? "bg-primary text-dark"
+                        : "text-primary hover:bg-primary-20"
+                    }`}
                   >
-                    <div className="h-5 w-5 flex justify-center items-center border border-primary rounded">
-                      {isActive && (
-                        <span
-                          className="h-3 w-3 rounded bg-primary"
-                          aria-hidden
-                        />
-                      )}
-                    </div>
-                    <span>{token.label}</span>
+                    {mode}
                   </button>
-                );
-              })}
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="title16 uppercase text-primary text-shadow-primary-10"
+              >
+                Show all
+              </button>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={resetFilters}
-            className="title16 uppercase text-primary text-shadow-primary-10"
-          >
-            Show all
-          </button>
         </div>
+        <div className="h-full max-h-[calc(100vh-360px)] w-full overflow-y-auto px-4 sm:px-6 lg:px-9 pb-7">
+          {viewMode === "grid" ? (
+            <div className="flex flex-wrap items-stretch gap-4">
+              {filtered.map((item) => {
+                const rarity = rarityTokens[item.rarity];
+                const status = statusTokens[item.status];
+                const iconSrc = rarityIcon[item.rarity];
+                const isInProgress = item.status === "in-progress";
+                const isTodo = item.status === "todo";
+                const isMuted = isInProgress || isTodo;
 
-        <div className="flex flex-wrap items-stretch gap-4">
-          {filtered.map((item) => {
-            const rarity = rarityTokens[item.rarity];
-            const status = statusTokens[item.status];
-            const iconSrc = rarityIcon[item.rarity];
-            const isInProgress = item.status === "in-progress";
-            const isTodo = item.status === "todo";
-            const isMuted = isInProgress || isTodo;
+                const cardHoverClasses = isMuted
+                  ? ""
+                  : "hover:shadow-[0_0_22px_var(--rarity-glow)] hover:border-[var(--rarity-border)]";
 
-            const cardHoverClasses = isMuted
-              ? ""
-              : "hover:shadow-[0_0_22px_var(--rarity-glow)] hover:border-[var(--rarity-border)]";
-
-            return (
-              <article
-                key={item.id}
-                className="relative flex flex-col w-full max-w-43.75"
-                style={{ opacity: isMuted ? 0.5 : 1 }}
-              >
-                <div
-                  className={`flex flex-col items-center justify-between border border-border/90 bg-dark transition-shadow duration-200 ${cardHoverClasses}`}
-                  style={{
-                    ["--rarity-border" as string]: rarity.pill,
-                    ["--rarity-glow" as string]: rarity.glow,
-                  }}
-                >
-                  <div className="relative h-28 w-28 my-3">
-                    <Image
-                      src={iconSrc}
-                      alt={item.title}
-                      fill
-                      sizes="140px"
-                      className="object-contain"
-                      priority={item.rarity === "legendary"}
-                    />
-                  </div>
-                  <div
-                    className="flex w-full items-center justify-center px-1 py-0.5 text-center"
-                    style={{
-                      backgroundColor: rarity.pill,
-                    }}
+                return (
+                  <article
+                    key={item.id}
+                    className="relative flex flex-col w-full max-w-43.75"
+                    style={{ opacity: isMuted ? 0.5 : 1 }}
                   >
-                    <p className="title16 !text-dark">{rarity.label}</p>
-                  </div>
-                </div>
-                <div className="py-3 text-center">
-                  <p
-                    className="title16 font-big font-semibold"
-                    style={{ color: rarity.pill }}
-                  >
-                    {item.title}
+                    <div
+                      className={`flex flex-col items-center justify-between border border-border/90 bg-dark transition-shadow duration-200 ${cardHoverClasses}`}
+                      style={{
+                        ["--rarity-border" as string]: rarity.pill,
+                        ["--rarity-glow" as string]: rarity.glow,
+                      }}
+                    >
+                      <div className="relative h-28 w-28 my-3">
+                        <Image
+                          src={iconSrc}
+                          alt={item.title}
+                          fill
+                          sizes="140px"
+                          className="object-contain"
+                          priority={item.rarity === "legendary"}
+                        />
+                      </div>
+                      <div
+                        className="flex w-full items-center justify-center px-1 py-0.5 text-center"
+                        style={{
+                          backgroundColor: rarity.pill,
+                        }}
+                      >
+                        <p className="title16 !text-dark">{rarity.label}</p>
+                      </div>
+                    </div>
+                    <div className="py-3 text-center">
+                      <p
+                        className="title16 font-big font-semibold"
+                        style={{ color: rarity.pill }}
+                      >
+                        {item.title}
+                      </p>
+                      {isTodo ? (
+                        <p className="text-xs uppercase leading-normal tracking-widest text-white">
+                          In queue
+                        </p>
+                      ) : null}
+                      {isInProgress ? (
+                        <p className="text-xs uppercase leading-normal tracking-widest text-info-light">
+                          In progress
+                        </p>
+                      ) : null}
+                      {item.note ? (
+                        <p className="text-xs uppercase leading-normal tracking-widest text-info-light">
+                          {item.note}
+                        </p>
+                      ) : null}
+                    </div>
+                  </article>
+                );
+              })}
+              {filtered.length === 0 ? (
+                <div className="col-span-full flex flex-col items-center justify-center gap-2 w-full min-h-52 border border-border/90 bg-black/40 px-4 py-6 text-center">
+                  <h1 className="text-2xl font-big font-bold text-primary">
+                    No achievements in this filter.
+                  </h1>
+                  <p className="title16 !text-white/70">
+                    Relax the filters to see everything again.
                   </p>
-                  {isTodo ? (
-                    <p className="text-xs uppercase leading-normal tracking-widest text-white">
-                      In queue
-                    </p>
-                  ) : null}
-                  {isInProgress ? (
-                    <p className="text-xs uppercase leading-normal tracking-widest text-info-light">
-                      In progress
-                    </p>
-                  ) : null}
-                  {item.note ? (
-                    <p className="text-xs uppercase leading-normal tracking-widest text-info-light">
-                      {item.note}
-                    </p>
-                  ) : null}
+                  <Button
+                    label="Reset filters"
+                    onClick={resetFilters}
+                    className="w-max mt-5"
+                    variant="outlined"
+                  />
                 </div>
-              </article>
-            );
-          })}
-          {filtered.length === 0 ? (
-            <div className="col-span-full flex flex-col items-center justify-center gap-2 w-full min-h-52 border border-border/90 bg-black/40 px-4 py-6 text-center">
-              <h1 className="text-2xl font-big font-bold text-primary">
-                No achievements in this filter.
-              </h1>
-              <p className="title16 !text-white/70">
-                Relax the filters to see everything again.
-              </p>
-              <Button
-                label="Reset filters"
-                onClick={resetFilters}
-                className="w-max mt-5"
-                variant="outlined"
-              />
+              ) : null}
             </div>
-          ) : null}
+          ) : (
+            <div className="flex flex-col gap-3">
+              {statusOrder.map((statusKey) => {
+                const section = filtered.filter(
+                  (item) => item.status === statusKey
+                );
+                if (section.length === 0) return null;
+                return (
+                  <div key={statusKey} className="space-y-2">
+                    <p className="title16 uppercase tracking-[0.16em] text-info-light">
+                      {statusTokens[statusKey].label}
+                    </p>
+                    <div className="space-y-3">
+                      {section.map((item) => renderListCard(item))}
+                    </div>
+                  </div>
+                );
+              })}
+              {filtered.length === 0 ? (
+                <div className="flex flex-col items-center justify-center gap-2 w-full min-h-52 border border-border/90 bg-black/40 px-4 py-6 text-center">
+                  <h1 className="text-2xl font-big font-bold text-primary">
+                    No achievements in this filter.
+                  </h1>
+                  <p className="title16 !text-white/70">
+                    Relax the filters to see everything again.
+                  </p>
+                  <Button
+                    label="Reset filters"
+                    onClick={resetFilters}
+                    className="w-max mt-5"
+                    variant="outlined"
+                  />
+                </div>
+              ) : null}
+            </div>
+          )}
         </div>
       </div>
     </div>

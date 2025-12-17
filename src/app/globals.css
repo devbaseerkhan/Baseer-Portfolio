@@ -33,6 +33,10 @@
   --color-blur: #2c0f14;
   --color-color: #ffffff;
   --color-transparent: rgba(255, 255, 255, 0);
+  --color-warning-linear: linear-gradient(270deg,rgba(232, 187, 74, 0.14) 0%, rgba(232, 187, 74, 0) 100%);
+  --color-primary-linear: linear-gradient(270deg,rgba(232, 74, 102, 0.14) 0%, rgba(232, 74, 102, 0) 100%);
+  --color-secondary-linear: linear-gradient(270deg,rgba(74, 175, 232, 0.14) 0%, rgba(74, 175, 232, 0) 100%);
+  --color-success-linear: linear-gradient(270deg,rgba(86, 205, 97, 0.14) 0%, rgba(86, 205, 97, 0) 100%);
 }
 
 :root {
@@ -100,6 +104,12 @@ body {
   letter-spacing: 0.08em;
 }
 
+.title12 {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--color-white);
+  line-height: normal;
+}
 .title14 {
   font-size: 14px;
   letter-spacing: 1px;

@@ -135,3 +135,42 @@ body {
   line-height: normal;
   color: var(--color-white);
 }
+
+/* Themed scrollbars */
+* {
+  scrollbar-color: rgba(var(--color-primary-rgb, 232, 74, 74), 0.5) rgba(255, 255, 255, 0.04);
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(var(--color-primary-rgb, 232, 74, 74), 0.45);
+  border-radius: 9999px;
+  border: 2px solid rgba(0, 0, 0, 0.5);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--color-primary-rgb, 232, 74, 74), 0.7);
+}
+
+.achievements-scroll {
+  scrollbar-color: rgba(var(--color-primary-rgb, 232, 74, 74), 0.8) rgba(255, 255, 255, 0.06);
+  scrollbar-width: thin;
+}
+.achievements-scroll::-webkit-scrollbar {
+  width: 12px;
+}
+.achievements-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+}
+.achievements-scroll::-webkit-scrollbar-thumb {
+  background: rgba(var(--color-primary-rgb, 232, 74, 74), 0.9);
+  border-radius: 9999px;
+  border: 2px solid rgba(0, 0, 0, 0.6);
+}
+.achievements-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--color-primary-rgb, 232, 74, 74), 1);
+}

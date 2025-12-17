@@ -480,7 +480,7 @@ export default function AchievementsContent() {
             </div>
           </div>
         </div>
-        <div className="h-full max-h-[calc(100vh-360px)] w-full overflow-y-auto px-4 sm:px-6 lg:px-9 pb-7">
+        <div className="achievements-scroll h-full max-h-[calc(100vh-360px)] w-full overflow-y-auto px-4 sm:px-6 lg:px-9 pb-7">
           {viewMode === "grid" ? (
             <div className="flex flex-wrap items-stretch gap-4">
               {filtered.map((item) => {

@@ -8,6 +8,7 @@ import ThemeSwitcher from "./components/ThemeSwitcher";
 import LogsContent from "./components/logsContent";
 import BeginningContent from "./components/beginningContent";
 import AchievementsContent from "./components/achievementsContent";
+import CreationsContent from "./components/creationsContent";
 import { IoBluetooth, IoSettingsOutline } from "react-icons/io5";
 import bronz from "../../public/bronz.png";
 import gold from "../../public/gold.png";
@@ -28,8 +29,7 @@ const navTabs = [
   },
   {
     label: "Creations",
-    content:
-      "A gallery of shipped products, prototypes, and playful tangents that show how ideas become real.",
+    content: <CreationsContent />,
   },
   {
     label: "Games",

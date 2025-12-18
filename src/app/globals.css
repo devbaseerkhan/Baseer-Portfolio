@@ -174,3 +174,45 @@ body {
 .achievements-scroll::-webkit-scrollbar-thumb:hover {
   background: rgba(var(--color-primary-rgb, 232, 74, 74), 1);
 }
+
+.creation-accent {
+  position: relative;
+  height: 12px;
+  background: linear-gradient(
+    to right,
+    var(--color-primary) 0%,
+    var(--color-primary) 100%
+  );
+}
+.creation-accent::before,
+.creation-accent::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 14px;
+  height: 12px;
+  border-top: 4px solid var(--color-primary);
+}
+.creation-accent::before {
+  left: 0;
+}
+.creation-accent::after {
+  right: 0;
+}
+
+.creation-card {
+  position: relative;
+  /* padding: 16px; */
+}
+.creation-card::before,
+.creation-card::after {
+  content: "";
+  position: absolute;
+  /* inset: 8px; */
+  /* border: 2px solid var(--color-primary); */
+  pointer-events: none;
+}
+.creation-card::after {
+  inset: 14px;
+  /* border-color: rgba(255, 255, 255, 0.08); */
+}

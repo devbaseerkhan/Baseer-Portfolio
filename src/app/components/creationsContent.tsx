@@ -63,6 +63,9 @@ const creations: Creation[] = [
   },
 ];
 
+const cornerClass =
+  "pointer-events-none absolute h-3 w-3 border-[1.5px] border-[var(--color-primary)]";
+
 export default function CreationsContent() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(1);
@@ -149,23 +152,33 @@ export default function CreationsContent() {
                 >
                   <div className="flex h-full flex-col px-4 pb-6 pt-4 ">
                     <BoxStack>
-                      <div className="flex flex-col justify-between gap-18 p-5">
-                        <h1 className="title16">{project.published}</h1>
-                        <div className="relative h-66 w-full overflow-hidden rounded-sm">
-                          <Image
-                            src={project.image}
-                            alt={project.title}
-                            fill
-                            className="object-cover"
-                            priority
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60" />
-                        </div>
-                        <Button
-                          label="View live"
-                          variant="outlined"
-                          className="w-max px-4 py-1 ml-auto"
+                      <div className="w-full relative overflow-hidden">
+                        <Image
+                          src={project.image}
+                          alt={project.title}
+                          fill
+                          className="object-cover absolute z-0 opacity-20 blur-xs"
+                          priority
                         />
+                        <div className="absolute z-10 w-full h-full bg-black/20" />
+                        <div className="relative z-20 flex flex-col justify-between gap-18 p-5">
+                          <h1 className="title16">{project.published}</h1>
+                          <div className="relative h-66 w-full overflow-hidden rounded-sm">
+                            <Image
+                              src={project.image}
+                              alt={project.title}
+                              fill
+                              className="object-cover"
+                              priority
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60" />
+                          </div>
+                          <Button
+                            label="View live"
+                            variant="outlined"
+                            className="w-max px-4 py-1 ml-auto"
+                          />
+                        </div>
                       </div>
                     </BoxStack>
                     <div className="space-y-4 p-4">
@@ -173,13 +186,27 @@ export default function CreationsContent() {
                         <h2 className="title18 font-big font-bold text-primary">
                           {project.title}
                         </h2>
-                        <p className="title14">
-                          {project.category}
-                        </p>
+                        <p className="title14">{project.category}</p>
                       </div>
                       <p className="title14 !text-info-light">
                         {project.description}
                       </p>
+                      <div className="w-full">
+                        <svg
+                          width="100%"
+                          // height="13"
+                          viewBox="0 0 374 13"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0L4.5 5L368.5 4.87688L374 0V9H0V0Z"
+                            fill="#E84A4A"
+                          />
+                          <path d="M5 12H110" stroke="#E84A4A" />
+                          <path d="M368 12L339 12" stroke="#E84A4A" />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </article>

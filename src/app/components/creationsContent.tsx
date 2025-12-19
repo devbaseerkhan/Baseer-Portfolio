@@ -151,7 +151,7 @@ export default function CreationsContent() {
                   style={{ width: `${100 / creations.length}%` }}
                 >
                   <div className="flex h-full flex-col px-4 pb-6 pt-4 ">
-                    <BoxStack>
+                    <BoxStack lg>
                       <div className="w-full relative overflow-hidden">
                         <Image
                           src={project.image}
@@ -201,10 +201,10 @@ export default function CreationsContent() {
                         >
                           <path
                             d="M0 0L4.5 5L368.5 4.87688L374 0V9H0V0Z"
-                            fill="#E84A4A"
+                            fill="var(--color-primary)"
                           />
-                          <path d="M5 12H110" stroke="#E84A4A" />
-                          <path d="M368 12L339 12" stroke="#E84A4A" />
+                          <path d="M5 12H110" stroke="var(--color-primary)" />
+                          <path d="M368 12L339 12" stroke="var(--color-primary)" />
                         </svg>
                       </div>
                     </div>

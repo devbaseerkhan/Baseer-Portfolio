@@ -1,6 +1,3 @@
-import Image from "next/image";
-import user from "../../public/user.png";
-import BoxStack from "./components/boxStack";
 import Badge from "./components/Badge";
 import Button from "./components/Button";
 import AppTabs from "./components/appTabs";
@@ -10,10 +7,13 @@ import BeginningContent from "./components/beginningContent";
 import AchievementsContent from "./components/achievementsContent";
 import CreationsContent from "./components/creationsContent";
 import ContactLauncher from "./components/contactLauncher";
+import AvatarReveal from "./components/avatarReveal";
 import { IoSettingsOutline } from "react-icons/io5";
 import bronz from "../../public/bronz.png";
 import gold from "../../public/gold.png";
 import { CgCheckR, CgCloseR } from "react-icons/cg";
+import BoxStack from "./components/boxStack";
+import Image from "next/image";
 
 const navTabs = [
   {
@@ -80,9 +80,7 @@ export default function Home() {
       </header>
       <div className="grid h-[calc(100vh-176px)] grid-cols-1 gap-4 lg:grid-cols-[200px_1fr_200px]">
         <aside className="flex flex-col gap-4 ">
-          <BoxStack className="p-3 max-h-45.25">
-            <Image src={user} alt="user" priority style={{ width: "100%" }} />
-          </BoxStack>
+          <AvatarReveal />
           <div className="flex flex-col gap-4 uppercase">
             <div className="flex flex-col">
               <span className="text-sm text-white">Name</span>

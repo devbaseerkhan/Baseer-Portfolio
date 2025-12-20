@@ -1,4 +1,6 @@
-type BoxStackProps = {
+import type React from "react";
+
+type BoxStackProps = React.HTMLAttributes<HTMLDivElement> & {
   className?: string;
   children?: React.ReactNode;
   lg?: boolean;
@@ -11,10 +13,12 @@ export default function BoxStack({
   className = "",
   lg = false,
   children,
+  ...rest
 }: BoxStackProps) {
   return (
     <div
       className={`relative h-full w-full border border-white/10 bg-transparent ${className}`}
+      {...rest}
     >
       <span
         className={`${cornerClass} -left-[0.75px] -top-[0.75px] border-b-0 border-r-0 ${

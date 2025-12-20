@@ -15,7 +15,7 @@ export type Creation = {
   brief?: string;
   about?: string;
   technologies?: string[];
-  files?: { name: string; size: string }[];
+  files?: { name: string; size: string; preview?: string }[];
 };
 
 type ProjectCardProps = {

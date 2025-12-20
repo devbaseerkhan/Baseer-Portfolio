@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import Button from "./Button";
 import BoxStack from "./boxStack";
 
@@ -13,17 +12,31 @@ export type Creation = {
   description: string;
   image: string;
   link: string;
+  brief?: string;
+  about?: string;
+  technologies?: string[];
+  files?: { name: string; size: string }[];
 };
 
 type ProjectCardProps = {
   project: Creation;
   priority?: boolean;
+  onViewDetails?: (project: Creation) => void;
 };
 
 export default function ProjectCard({
   project,
   priority = false,
+  onViewDetails,
 }: ProjectCardProps) {
+  const handleView = () => {
+    if (onViewDetails) {
+      onViewDetails(project);
+    } else if (project.link) {
+      window.open(project.link, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <div className="flex h-full flex-col px-4 pb-6 pt-4">
       <BoxStack lg>
@@ -47,13 +60,14 @@ export default function ProjectCard({
                 priority={priority}
               />
             </div>
-            <Link href={project.link} target="_blank" className="ml-auto ">
+            <div className="ml-auto">
               <Button
                 label="View live"
                 variant="outlined"
                 className="w-max px-4 py-1"
+                onClick={handleView}
               />
-            </Link>
+            </div>
           </div>
         </div>
       </BoxStack>

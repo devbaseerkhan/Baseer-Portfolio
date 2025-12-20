@@ -8,6 +8,8 @@ type BadgeProps = {
   label: ReactNode;
   variant?: BadgeVariant;
   className?: string;
+  labelClassName?: string;
+  children?: ReactNode;
 };
 
 type VariantStyles = {
@@ -33,6 +35,8 @@ export default function Badge({
   label,
   variant = "default",
   className = "",
+  labelClassName,
+  children,
 }: BadgeProps) {
   const { container } = variantStyles[variant];
 
@@ -40,7 +44,7 @@ export default function Badge({
     <div
       className={`relative isolate inline-flex h-6 items-center overflow-hidden px-2.5 uppercase tracking-[0.16em] transition-all duration-200 ${container} ${className}`}
     >
-      <span>{label}</span>
+      <span className={labelClassName}>{label}</span>
       {variant === "light" || (
         <Image
           src={hexIcon}
@@ -48,6 +52,7 @@ export default function Badge({
           className="w-7 h-full absolute right-0"
         />
       )}
+      {children}
     </div>
   );
 }

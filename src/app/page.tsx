@@ -9,7 +9,8 @@ import LogsContent from "./components/logsContent";
 import BeginningContent from "./components/beginningContent";
 import AchievementsContent from "./components/achievementsContent";
 import CreationsContent from "./components/creationsContent";
-import { IoBluetooth, IoSettingsOutline } from "react-icons/io5";
+import ContactLauncher from "./components/contactLauncher";
+import { IoSettingsOutline } from "react-icons/io5";
 import bronz from "../../public/bronz.png";
 import gold from "../../public/gold.png";
 import { CgCheckR, CgCloseR } from "react-icons/cg";
@@ -108,14 +109,7 @@ export default function Home() {
               <span className="text-sm text-white">availability</span>
               <Badge label="open for hire" />
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-sm text-white">social</span>
-              <Button
-                label="Open Connection"
-                icon={<IoBluetooth />}
-                variant="outlined"
-              />
-            </div>
+            <ContactLauncher />
           </div>
 
           <div className="mt-auto">

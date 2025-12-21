@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import ProjectCard, { type Creation } from "./projectCard";
 import ProjectDetails from "./projectDetails";
+import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 
 type SliderVariant = "classic" | "cinematic";
 
@@ -205,18 +206,18 @@ export default function CreationsContent() {
                   <button
                     type="button"
                     onClick={prev}
-                    className="h-10 w-10 rounded-sm border border-primary bg-black/40 text-primary hover:bg-primary-10 transition"
+                    className="flex justify-center items-center h-10 w-10 rounded-sm border border-primary bg-black/40 text-2xl text-primary hover:bg-primary-10 transition cursor-pointer"
                     aria-label="Previous creation"
                   >
-                    ‹
+                    <IoChevronBackOutline />
                   </button>
                   <button
                     type="button"
                     onClick={next}
-                    className="h-10 w-10 rounded-sm border border-primary bg-black/40 text-primary hover:bg-primary-10 transition"
+                    className="flex justify-center items-center h-10 w-10 rounded-sm border border-primary bg-black/40 text-2xl text-primary hover:bg-primary-10 transition cursor-pointer"
                     aria-label="Next creation"
                   >
-                    ›
+                    <IoChevronForwardOutline />
                   </button>
                 </div>
               </div>

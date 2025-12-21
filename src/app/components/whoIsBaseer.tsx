@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import BoxStack from "./boxStack";
+import UserSvg from "./userSvg";
 
 type WhoIsBaseerProps = {
   open: boolean;
@@ -22,9 +23,9 @@ export default function WhoIsBaseer({ open, onClose }: WhoIsBaseerProps) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/10 backdrop-blur py-6 px-[4%] xl:px-[8%] 2xl:px-[15%]">
-      <div className="flex min-h-full w-full items-center">
-        <div className="flex flex-col gap-14 lg:gap-20 border border-primary p-4 sm:p-8 bg-primary-10 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 bg-black/10 backdrop-blur py-6 px-[4%] xl:px-[8%] 2xl:px-[15%] flex justify-center items-center">
+      <div className="relative max-h-[90%] overflow-y-auto flex flex-col lg:gap-14 border border-primary bg-primary-10 backdrop-blur-sm">
+        <div className="w-full sticky top-0 bg-primary-10 px-4 md:px-8 py-2 md:py-4 backdrop-blur">
           <div className="flex items-start justify-center gap-3 relative">
             <div className="space-y-1 text-center">
               <p className="title16">The short introduction of my life</p>
@@ -41,8 +42,9 @@ export default function WhoIsBaseer({ open, onClose }: WhoIsBaseerProps) {
               <IoClose className="text-2xl" />
             </button>
           </div>
-
-          <div className="grid gap-8 xl:gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+        </div>
+        <div className="w-full p-4 md:p-8">
+          <div className="grid gap-8 xl:gap-14 lg:grid-cols-[1.05fr_347px] 2xl:px-[6%]">
             <div className="flex flex-col gap-10">
               <section className="grid grid-cols-1 xl:grid-cols-[180px_1fr] gap-4 xl:gap-7">
                 <h3 className="title16 !text-info-light xl:text-right">
@@ -83,10 +85,8 @@ export default function WhoIsBaseer({ open, onClose }: WhoIsBaseerProps) {
                 </p>
               </section>
             </div>
-            <BoxStack>
-              <div className="h-full w-full bg-dark">
-         
-              </div>
+            <BoxStack className="h-full max-h-110 2xl:max-h-173.5 w-full flex justify-center items-center !bg-black backdrop-blur-2xl">
+              <UserSvg />
             </BoxStack>
           </div>
         </div>

@@ -1,16 +1,14 @@
-import Badge from "./components/Badge";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import AchievementsContent from "./components/achievementsContent";
 import AppTabs from "./components/appTabs";
-import AvatarReveal from "./components/avatarReveal";
 import BeginningContent from "./components/beginningContent";
-import ContactLauncher from "./components/contactLauncher";
 import CreationsContent from "./components/creationsContent";
 import LogsContent from "./components/logsContent";
 
 import BoxStack from "./components/boxStack";
 import QuestBlock from "./components/questBlock";
 import QuestDrawer from "./components/questDrawer";
+import Sidebar from "./components/sidebar";
 
 const navTabs = [
   {
@@ -66,44 +64,7 @@ export default function Home() {
         </div>
       </header>
       <div className="grid h-[calc(100vh-176px)] grid-cols-1 gap-4 lg:grid-cols-[200px_1fr] 2xl:grid-cols-[200px_1fr_200px]">
-        <aside className="flex flex-col gap-4 ">
-          <AvatarReveal />
-          <div className="flex flex-col gap-4 uppercase">
-            <div className="flex flex-col">
-              <span className="text-sm text-white">Name</span>
-              <span className="font-big text-lg font-bold tracking-widest text-primary">
-                Baseer Ahmed Khan
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm text-white">Occupation</span>
-              <span className="font-big text-lg font-bold tracking-widest text-primary">
-                Frontend Developer
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm text-white">Corporation</span>
-              <span className="font-big text-lg font-bold tracking-widest text-primary">
-                Legacy.ai
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-1">
-              <span className="text-sm text-white">availability</span>
-              <Badge label="open for hire" />
-            </div>
-            <ContactLauncher />
-          </div>
-
-          <div className="mt-auto">
-            <span className="block title18 text-primary">Motto:</span>
-            <p className="title16 text-white/70">
-              Saep enimis neque numquam recusandae laudantium.
-            </p>
-          </div>
-        </aside>
+        <Sidebar />
         <main className="relative hidden lg:flex min-h-[70vh]">
           <BoxStack className="flex flex-1">
             <AppTabs tabs={navTabs} />

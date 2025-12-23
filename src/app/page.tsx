@@ -1,19 +1,15 @@
 import Badge from "./components/Badge";
-import Button from "./components/Button";
-import AppTabs from "./components/appTabs";
 import ThemeSwitcher from "./components/ThemeSwitcher";
-import LogsContent from "./components/logsContent";
-import BeginningContent from "./components/beginningContent";
 import AchievementsContent from "./components/achievementsContent";
-import CreationsContent from "./components/creationsContent";
-import ContactLauncher from "./components/contactLauncher";
+import AppTabs from "./components/appTabs";
 import AvatarReveal from "./components/avatarReveal";
-import { IoSettingsOutline } from "react-icons/io5";
-import bronz from "../../public/bronz.png";
-import gold from "../../public/gold.png";
-import { CgCheckR, CgCloseR } from "react-icons/cg";
+import BeginningContent from "./components/beginningContent";
+import ContactLauncher from "./components/contactLauncher";
+import CreationsContent from "./components/creationsContent";
+import LogsContent from "./components/logsContent";
+
 import BoxStack from "./components/boxStack";
-import Image from "next/image";
+import QuestBlock from "./components/questBlock";
 
 const navTabs = [
   {
@@ -32,22 +28,12 @@ const navTabs = [
     label: "Creations",
     content: <CreationsContent />,
   },
-  {
-    label: "Games",
-    content:
-      "Side quests, game jams, and interactive toys built for fun, curiosity, and rapid iteration.",
-  },
-];
-
-const questRewards = [
-  { label: "+5", icon: bronz },
-  { label: "+25", icon: gold },
 ];
 
 export default function Home() {
   return (
     <div className="h-screen px-4 pb-20 lg:px-6 xl:px-10 2xl:px-20">
-      <header className="flex h-24 items-center justify-between gap-4">
+      <header className="flex h-20 lg:h-24 items-center justify-between gap-4">
         <div className="flex items-center gap-11">
           <div className="flex items-baseline gap-2">
             <span className="font-big title26 font-bold text-primary ">48</span>
@@ -78,7 +64,7 @@ export default function Home() {
           </span>
         </div>
       </header>
-      <div className="grid h-[calc(100vh-176px)] grid-cols-1 gap-4 lg:grid-cols-[200px_1fr_200px]">
+      <div className="grid h-[calc(100vh-176px)] grid-cols-1 gap-4 lg:grid-cols-[200px_1fr] 2xl:grid-cols-[200px_1fr_200px]">
         <aside className="flex flex-col gap-4 ">
           <AvatarReveal />
           <div className="flex flex-col gap-4 uppercase">
@@ -117,73 +103,13 @@ export default function Home() {
             </p>
           </div>
         </aside>
-        <main className="relative flex min-h-[70vh] flex-col">
-          <BoxStack className="flex flex-1 flex-col">
+        <main className="relative hidden lg:flex min-h-[70vh]">
+          <BoxStack className="flex flex-1">
             <AppTabs tabs={navTabs} />
           </BoxStack>
         </main>
-        <aside className="flex flex-col gap-4">
-          <div className="flex flex-col gap-4 border-l-2 border-primary">
-            <div className="flex flex-col">
-              <Badge label="active quest" variant="active" />
-              <Badge label="The React Skill-Up Line" variant="light" />
-            </div>
-            <div className="flex flex-col gap-6 pl-2">
-              <div>
-                <p className="title14">quest name</p>
-                <p className="title18 font-big text-primary font-bold">
-                  React website
-                </p>
-              </div>
-              <div>
-                <p className="title14">Goal</p>
-                <p className="title14 !text-info-light">
-                  Build this website. Implement a full react with multiple
-                  routers, UI elements and tricky styling. Make it all work
-                  great!
-                </p>
-              </div>
-              <div>
-                <div className="title14 mb-2">Rewards</div>
-                <div className="flex gap-2">
-                  {questRewards.map((reward) => (
-                    <div
-                      key={reward.label}
-                      className="flex flex-col items-center gap-1 text-[12px] uppercase tracking-widest text-info-light"
-                    >
-                      <Image
-                        src={reward.icon}
-                        alt="reward"
-                        height={40}
-                        width={40}
-                      />
-                      <span>{reward.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-auto flex flex-col gap-3 border-t border-white/10 pt-3">
-            <Button
-              label="Sound Effects"
-              icon={<CgCheckR className="text-3xl" />}
-              variant="outlined"
-              className="border-0"
-            />
-            <Button
-              label="Music"
-              icon={<CgCloseR className="text-3xl" />}
-              variant="outlined"
-              className="border-0"
-            />
-            <Button
-              label="Visual Settings"
-              icon={<IoSettingsOutline />}
-              variant="outlined"
-              className="border-white/10"
-            />
-          </div>
+        <aside className="hidden 2xl:block">
+          <QuestBlock />
         </aside>
       </div>
       <ThemeSwitcher />

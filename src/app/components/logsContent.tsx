@@ -38,8 +38,8 @@ const olderLogs = [
 
 export default function LogsContent() {
   return (
-    <div className="h-full w-full overflow-y-auto px-4 py-10 sm:px-6 sm:py-12">
-      <div className="flex h-full flex-col gap-6 max-w-285 mx-auto">
+    <div className="h-full w-full max-h-[calc(100vh-176px)] overflow-y-auto pt-10 sm:pt-12 px-4 sm:px-6">
+      <div className="flex h-full flex-col gap-6 max-w-285 mx-auto pb-10 sm:pb-12">
         <h1 className="text-center title18">Data Log Dump Initialized.</h1>
         <div className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center justify-between gap-3 bg-primary px-2">
@@ -59,7 +59,6 @@ export default function LogsContent() {
             </span>
           </div>
         </div>
-
         <div className="grid gap-4 md:grid-cols-2">
           {sections.map((section) => (
             <div
@@ -81,7 +80,6 @@ export default function LogsContent() {
             </div>
           ))}
         </div>
-
         <div className="flex justify-center">
           <div className="w-full max-w-72 sm:max-w-80">
             <Button
@@ -92,7 +90,6 @@ export default function LogsContent() {
             />
           </div>
         </div>
-
         <div className="space-y-1 border-t border-white/10 pt-6">
           <p className="title18">Older Logs:</p>
           <div className="space-y-2">

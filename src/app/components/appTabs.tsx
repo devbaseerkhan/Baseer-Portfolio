@@ -19,7 +19,7 @@ export default function AppTabs({ tabs }: AppTabsProps) {
     typeof activeContent === "string" || typeof activeContent === "number";
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-1 flex-col relative">
       <div className="flex-1 ">
         {isTextContent ? (
           <div className="max-w-162.5 mx-auto space-y-3 text-center">
@@ -32,7 +32,7 @@ export default function AppTabs({ tabs }: AppTabsProps) {
           activeContent
         )}
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 max-w-205 mx-auto -mb-14">
+      <div className="grid grid-cols-4 gap-3.5 w-full max-w-170 mx-auto  absolute -bottom-14 left-1/2 -translate-x-1/2">
         {tabs.map((tab) => {
           const isActive = tab.label === activeTab;
           const isHovered = tab.label === hoveredTab;

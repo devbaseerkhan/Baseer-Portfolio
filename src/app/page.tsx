@@ -10,6 +10,7 @@ import LogsContent from "./components/logsContent";
 
 import BoxStack from "./components/boxStack";
 import QuestBlock from "./components/questBlock";
+import QuestDrawer from "./components/questDrawer";
 
 const navTabs = [
   {
@@ -113,6 +114,7 @@ export default function Home() {
         </aside>
       </div>
       <ThemeSwitcher />
+      <QuestDrawer />
     </div>
   );
 }

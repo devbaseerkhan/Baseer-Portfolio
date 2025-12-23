@@ -20,14 +20,14 @@ export default function AvatarReveal() {
   return (
     <>
       <BoxStack
-        className="p-3 max-h-45.25 cursor-pointer transition hover:-translate-y-[2px]"
+        className="p-1 lg:p-3 max-h-45.25 cursor-pointer transition hover:-translate-y-[2px]"
         onClick={handleOpen}
         onKeyDown={handleKeyDown}
         role="button"
         tabIndex={0}
         aria-label="Open biography"
       >
-        <Image src={user} alt="user" priority style={{ width: "100%" }} />
+        <Image src={user} alt="user" priority style={{ width: "100%", height: '100%' }} />
       </BoxStack>
       <WhoIsBaseer open={open} onClose={() => setOpen(false)} />
     </>

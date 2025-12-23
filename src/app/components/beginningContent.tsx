@@ -1,6 +1,6 @@
 export default function BeginningContent() {
   return (
-    <div className="flex h-full flex-col items-center gap-4 relative px-4 py-10 sm:px-6 sm:py-12">
+    <div className="flex h-full w-full flex-col items-center gap-4 relative px-4 py-10 sm:px-6 sm:py-12">
       <div className="max-w-3xl relative z-10">
         <h1 className="text-center title18">
           Swimming through a vast network of interconnected devices and servers,

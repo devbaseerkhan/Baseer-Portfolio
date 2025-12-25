@@ -8,7 +8,7 @@ export default function Header({ className = "", ...rest }: HeaderProps) {
       className={`flex h-20 lg:h-24 items-center justify-between gap-4 ${className}`}
       {...rest}
     >
-      <div className="flex items-center gap-11">
+      <div className="flex items-center gap-5 lg:gap-11">
         <div className="flex items-baseline gap-2">
           <span className="font-big title26 font-bold text-primary ">48</span>
           <span className="title16 font-big !text-white/60">Level</span>
@@ -27,8 +27,7 @@ export default function Header({ className = "", ...rest }: HeaderProps) {
           </div>
         </div>
       </div>
-
-      <div className="flex items-center gap-6 title14">
+      <div className="flex items-center gap-2 lg:gap-6 title14">
         <span>Credits</span>
         <span>
           <span className="!text-info-light">Server Time:</span> 08:42

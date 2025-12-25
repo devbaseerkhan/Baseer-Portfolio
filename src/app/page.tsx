@@ -40,7 +40,7 @@ export default function Home() {
       </div>
       <div className="h-[calc(100vh-48px)] md:h-[calc(100vh-116px)] lg:h-[calc(100vh-176px)] flex flex-col gap-4 lg:grid lg:grid-cols-[200px_1fr] 2xl:grid-cols-[200px_1fr_200px]">
         <div className="w-full flex flex-col gap-4 flex-1 lg:hidden">
-          <h1 className="text-center text-[16px] md:text-lg font-iceland leading-none max-w-[90%] sm:max-w-[70%] mx-auto">
+          <h1 className="text-center text-sm md:text-lg font-iceland leading-none w-full sm:max-w-[70%] mx-auto">
             Swimming through a vast network of interconnected devices and
             servers, spreading joy and whimsy to users across the globe
           </h1>

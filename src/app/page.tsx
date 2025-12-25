@@ -10,8 +10,8 @@ import BoxStack from "./components/boxStack";
 import QuestBlock from "./components/questBlock";
 import QuestDrawer from "./components/questDrawer";
 import Sidebar from "./components/sidebar";
-import Button from "./components/Button";
 import AvatarReveal from "./components/avatarReveal";
+import NavigationDrawer from "./components/navigationDrawer";
 
 const navTabs = [
   {
@@ -56,8 +56,8 @@ export default function Home() {
           <QuestBlock />
         </aside>
         <div className="w-full flex lg:hidden items-center gap-2">
-          <Button label="navigation" className="flex flex-1 h-8.25 md:h-12.5" />
-        <AvatarReveal />
+          <NavigationDrawer triggerClassName="flex flex-1 h-8.25 md:h-12.5" />
+          <AvatarReveal />
         </div>
       </div>
       <ThemeSwitcher />

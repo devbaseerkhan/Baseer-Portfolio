@@ -1,8 +1,13 @@
 type HeaderProps = React.HTMLAttributes<HTMLElement> & {
   className?: string;
+  credits?: boolean;
 };
 
-export default function Header({ className = "", ...rest }: HeaderProps) {
+export default function Header({
+  className = "",
+  credits = true,
+  ...rest
+}: HeaderProps) {
   return (
     <header
       className={`flex h-20 lg:h-24 items-center justify-between gap-4 ${className}`}
@@ -27,15 +32,17 @@ export default function Header({ className = "", ...rest }: HeaderProps) {
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-2 lg:gap-6 title14">
-        <span>Credits</span>
-        <span>
-          <span className="!text-info-light">Server Time:</span> 08:42
-        </span>
-        <span>
-          <span className="!text-info-light">Local Time:</span> 15:42
-        </span>
-      </div>
+      {credits && (
+        <div className="flex items-center gap-2 lg:gap-6 title14">
+          <span>Credits</span>
+          <span>
+            <span className="!text-info-light">Server Time:</span> 08:42
+          </span>
+          <span>
+            <span className="!text-info-light">Local Time:</span> 15:42
+          </span>
+        </div>
+      )}
     </header>
   );
 }

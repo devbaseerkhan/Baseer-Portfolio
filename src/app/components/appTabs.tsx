@@ -1,6 +1,6 @@
 "use client";
 import { useState, type ReactNode } from "react";
-import Badge from "./Badge";
+import TabButton from "./tabButton";
 
 type Tab = {
   label: string;
@@ -13,7 +13,6 @@ type AppTabsProps = {
 
 export default function AppTabs({ tabs }: AppTabsProps) {
   const [activeTab, setActiveTab] = useState(tabs[0]?.label ?? "");
-  const [hoveredTab, setHoveredTab] = useState<string | null>(null);
   const activeContent = tabs.find((tab) => tab.label === activeTab)?.content;
   const isTextContent =
     typeof activeContent === "string" || typeof activeContent === "number";
@@ -33,33 +32,14 @@ export default function AppTabs({ tabs }: AppTabsProps) {
         )}
       </div>
       <div className="grid grid-cols-4 gap-3.5 w-full max-w-170 mx-auto  absolute -bottom-14 left-1/2 -translate-x-1/2">
-        {tabs.map((tab) => {
-          const isActive = tab.label === activeTab;
-          const isHovered = tab.label === hoveredTab;
-          const isHighlighted = isActive || isHovered;
-
-          return (
-            <button
-              key={tab.label}
-              type="button"
-              onClick={() => setActiveTab(tab.label)}
-              onMouseEnter={() => setHoveredTab(tab.label)}
-              onMouseLeave={() => setHoveredTab(null)}
-              className={`border-l-2 transition hover:border-primary-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark cursor-pointer ${
-                isHighlighted ? "border-primary" : "border-light"
-              }`}
-            >
-              <Badge
-                label={tab.label}
-                variant={isHighlighted ? "active" : "inactive"}
-                className="w-full"
-              />
-              <span className="block text-xs tracking-widest leading-3 uppercase text-white/50 font-iceland text-left p-2 bg-border/10">
-                Navigate or consolidate launch since 2016
-              </span>
-            </button>
-          );
-        })}
+        {tabs.map((tab) => (
+          <TabButton
+            key={tab.label}
+            label={tab.label}
+            active={tab.label === activeTab}
+            onClick={() => setActiveTab(tab.label)}
+          />
+        ))}
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export default function Sidebar({ className = "", ...rest }: SidebarProps) {
       {...rest}
     >
       <div className="hidden sm:block">
-        <AvatarReveal />
+        <AvatarReveal avatar />
       </div>
       <div className="flex flex-col gap-5 lg:gap-4">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:flex lg:flex-col gap-2 md:gap-4 lg:gap-4 uppercase">

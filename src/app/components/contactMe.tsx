@@ -27,9 +27,9 @@ export default function ContactMe({ open, onClose }: ContactMeProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/10 backdrop-blur-sm px-4 py-6 sm:px-[8%]">
-      <div className="flex min-h-full w-full items-center">
-        <div className="flex w-full max-w-117.5 flex-col justify-center gap-7 py-8">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/70 lg:bg-black/10 backdrop-blur-sm px-4 py-6 sm:px-[8%]">
+      <div className="flex min-h-full w-full justify-center lg:justify-start items-center">
+        <div className="flex w-full max-w-117.5 flex-col justify-center gap-4 sm:gap-7 py-8">
           <div className="space-y-1">
             <h1 className="title26 font-big font-bold">Open for hire</h1>
             <p className="title16 !text-white/70">
@@ -37,10 +37,10 @@ export default function ContactMe({ open, onClose }: ContactMeProps) {
             </p>
           </div>
           <form
-            className="flex flex-col gap-7"
+            className="flex flex-col gap-4 sm:gap-7"
             onSubmit={handleSubmit}
           >
-            <div className="flex flex-col border border-white/10 bg-primary-10 p-5 sm:p-8">
+            <div className="flex flex-col border border-white/10 bg-primary-10 p-5 lg:p-8">
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-2">
                   <label className="title18 text-primary font-big font-bold ">
@@ -78,14 +78,14 @@ export default function ContactMe({ open, onClose }: ContactMeProps) {
               <Button
                 type="submit"
                 label="Send message [Enter]"
-                className="w-full px-4 py-2 bg-primary text-dark border-primary"
+                className="w-full px-4 sm:py-2 bg-primary text-dark border-primary"
               />
               <Button
                 type="button"
                 label="Discard [Esc]"
                 variant="outlined"
                 onClick={onClose}
-                className="w-full px-4 py-2 text-white"
+                className="w-full px-4 sm:py-2 text-white"
               />
             </div>
           </form>

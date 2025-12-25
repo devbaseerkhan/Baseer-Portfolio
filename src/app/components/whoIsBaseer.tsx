@@ -23,9 +23,9 @@ export default function WhoIsBaseer({ open, onClose }: WhoIsBaseerProps) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/10 backdrop-blur py-6 px-[4%] xl:px-[8%] 2xl:px-[15%] flex justify-center items-center">
+    <div className="fixed inset-0 z-50 bg-black/70 lg:bg-black/10 backdrop-blur py-6 px-[4%] xl:px-[8%] 2xl:px-[15%] flex justify-center items-center">
       <div className="relative max-h-[90%] overflow-y-auto flex flex-col lg:gap-14 border border-primary bg-primary-10 backdrop-blur-sm">
-        <div className="w-full sticky top-0 bg-primary-10 px-4 md:px-8 py-2 md:py-4 backdrop-blur">
+        <div className="w-full sticky top-0 bg-black/70 lg:bg-primary-10 px-4 md:px-8 py-2 md:py-4 backdrop-blur">
           <div className="flex items-start justify-center gap-3 relative">
             <div className="space-y-1 text-center">
               <p className="title16">The short introduction of my life</p>

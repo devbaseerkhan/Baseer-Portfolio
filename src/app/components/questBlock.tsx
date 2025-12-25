@@ -1,11 +1,10 @@
 import Image from "next/image";
 import type React from "react";
 import Button from "./Button";
-import { CgCheckR, CgCloseR } from "react-icons/cg";
-import { IoSettingsOutline } from "react-icons/io5";
 import Badge from "./Badge";
 import bronz from "../../../public/bronz.png";
 import gold from "../../../public/gold.png";
+import ControlsButtons from "./controlsButtons";
 
 type QuestBlockProps = React.HTMLAttributes<HTMLDivElement> & {
   className?: string;
@@ -61,26 +60,7 @@ export default function QuestBlock({
           </div>
         </div>
       </div>
-      <div className="mt-auto flex flex-col gap-3 border-t border-white/10 pt-3">
-        <Button
-          label="Sound Effects"
-          icon={<CgCheckR className="text-3xl" />}
-          variant="outlined"
-          className="border-0"
-        />
-        <Button
-          label="Music"
-          icon={<CgCloseR className="text-3xl" />}
-          variant="outlined"
-          className="border-0"
-        />
-        <Button
-          label="Visual Settings"
-          icon={<IoSettingsOutline />}
-          variant="outlined"
-          className="border-white/10"
-        />
-      </div>
+      <ControlsButtons className="mt-auto" />
     </div>
   );
 }

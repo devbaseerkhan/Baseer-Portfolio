@@ -13,20 +13,20 @@ export default function Header({
       className={`flex h-20 lg:h-24 items-center justify-between gap-4 ${className}`}
       {...rest}
     >
-      <div className="flex items-center gap-5 lg:gap-11">
-        <div className="flex items-baseline gap-2">
-          <span className="font-big title26 font-bold text-primary ">48</span>
-          <span className="title16 font-big !text-white/60">Level</span>
+      <div className="flex items-center gap-3 md:gap-5 lg:gap-11">
+        <div className="flex items-baseline gap-1 md:gap-2">
+          <span className="text-2xl md:text-[26px] font-big font-bold text-primary ">48</span>
+          <span className="text-sm md:text-[16px] font-big !text-white/60">Level</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 md:gap-3">
           <button className="flex h-8 w-8 items-center justify-center border border-white/20 bg-white/5 font-big text-lg font-semibold text-white">
             +
           </button>
-          <div className="flex items-baseline gap-2">
-            <span className="font-big title26 font-bold text-primary ">
+          <div className="flex items-baseline gap-1 md:gap-2">
+            <span className="text-2xl md:text-[26px] font-big font-bold text-primary ">
               1,425
             </span>
-            <span className="title16 font-big !text-white/60">
+            <span className="text-sm md:text-[16px] font-big !text-white/60">
               Coins Awarded
             </span>
           </div>

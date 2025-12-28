@@ -107,10 +107,20 @@ export default function CreationsContent() {
       if (typeof window === "undefined") return;
       const width = window.innerWidth;
       setViewportWidth(width);
-      if (width >= 1280) {
+      if (width >= 1920) {
         setItemsPerView(3);
+      } else if (width >= 1750) {
+        setItemsPerView(2.5);
+      } else if (width >= 1536) {
+        setItemsPerView(2);
+      } else if (width >= 1280) {
+        setItemsPerView(2.5);
+      } else if (width >= 1024) {
+        setItemsPerView(1.5);
       } else if (width >= 900) {
         setItemsPerView(2);
+      } else if (width > 540) {
+        setItemsPerView(1.5);
       } else {
         setItemsPerView(1);
       }
@@ -125,14 +135,15 @@ export default function CreationsContent() {
       ? Math.max(0, creations.length - itemsPerView)
       : creations.length - 1;
   const currentIndex = Math.min(activeIndex, maxIndex);
+  const slideWidthPercent = 100 / creations.length;
 
   const trackStyle = useMemo(() => {
-    const translate = -(currentIndex * (100 / itemsPerView));
+    const translate = -(currentIndex * slideWidthPercent);
     return {
-      width: `${(creations.length * 100) / itemsPerView}%`,
+      width: `${(creations.length / itemsPerView) * 100}%`,
       transform: `translateX(${translate}%)`,
     };
-  }, [currentIndex, itemsPerView]);
+  }, [currentIndex, itemsPerView, slideWidthPercent]);
 
   const activeProject = detailsProject ?? creations[currentIndex];
 
@@ -227,7 +238,7 @@ export default function CreationsContent() {
                   <article
                     key={project.id}
                     className="creation-card flex-shrink-0"
-                    style={{ width: `${100 / itemsPerView}%` }}
+                    style={{ width: `${100 / creations.length}%` }}
                   >
                     <ProjectCard
                       project={project}

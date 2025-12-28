@@ -61,9 +61,16 @@ export default function ControlsButtons({
   ...rest
 }: ControlsButtonsProps) {
   const [isMusicOn, setIsMusicOn] = useState(true);
+  const [sfxOn, setSfxOn] = useState(true);
   const [selectedTrackId, setSelectedTrackId] = useState(tracks[0].id);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hasStartedRef = useRef(false);
+  const broadcastSfx = (enabled: boolean) => {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(
+      new CustomEvent("button-sfx-toggle", { detail: { enabled } }),
+    );
+  };
 
   const getTrack = (id: string) => tracks.find((t) => t.id === id) ?? tracks[0];
 
@@ -198,6 +205,10 @@ export default function ControlsButtons({
     [],
   );
 
+  useEffect(() => {
+    broadcastSfx(sfxOn);
+  }, [sfxOn]);
+
   return (
     <div
       className={`flex flex-col gap-3 border-t border-white/10 pt-3 ${className}`}
@@ -233,8 +244,15 @@ export default function ControlsButtons({
         />
       </div>
       <Button
-        label="Sound Effects"
-        icon={<CgCheckR className="text-3xl" />}
+        label={sfxOn ? "Sound On" : "Sound Off"}
+        icon={
+          sfxOn ? (
+            <CgCheckR className="text-3xl" />
+          ) : (
+            <CgCloseR className="text-3xl" />
+          )
+        }
+        onClick={() => setSfxOn((prev) => !prev)}
         variant="outlined"
         className="border-0"
       />

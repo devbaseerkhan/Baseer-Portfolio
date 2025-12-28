@@ -49,9 +49,9 @@ export default function ProjectCard({
             priority={priority}
           />
           <div className="absolute z-10 h-full w-full bg-black/20" />
-          <div className="relative z-20 flex flex-col justify-between gap-18 p-5">
+          <div className="relative z-20 flex flex-col justify-between gap-12 xl:gap-18 p-4 xl:p-5">
             <h1 className="title16">{project.published}</h1>
-            <div className="relative h-66 w-full overflow-hidden rounded-sm">
+            <div className="relative h-50 2xl:h-66 w-full overflow-hidden rounded-sm">
               <Image
                 src={project.image}
                 alt={project.title}
@@ -71,7 +71,7 @@ export default function ProjectCard({
           </div>
         </div>
       </BoxStack>
-      <div className="space-y-4 p-4">
+      <div className="space-y-4 p-3 xl:p-4">
         <div className="flex flex-col">
           <h2 className="title18 font-big font-bold text-primary">
             {project.title}

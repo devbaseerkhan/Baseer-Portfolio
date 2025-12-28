@@ -98,11 +98,15 @@ export default function CreationsContent() {
   const [itemsPerView, setItemsPerView] = useState(1);
   const [variant, setVariant] = useState<SliderVariant>("cinematic");
   const [detailsProject, setDetailsProject] = useState<Creation | null>(null);
+  const [viewportWidth, setViewportWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
 
   useEffect(() => {
     const handleResize = () => {
       if (typeof window === "undefined") return;
       const width = window.innerWidth;
+      setViewportWidth(width);
       if (width >= 1280) {
         setItemsPerView(3);
       } else if (width >= 900) {
@@ -241,7 +245,7 @@ export default function CreationsContent() {
               {creations.map((project, index) => {
                 const delta = cinematicDelta(index);
                 const isHidden = Math.abs(delta) > 1;
-                const translateX = delta * 380;
+                const translateX = delta * (viewportWidth < 640 ? 280 : 380);
                 const rotateY = delta * 45;
                 const scale = delta === 0 ? 1 : 0.82;
                 const opacity = Math.abs(delta) > 0 ? 0.55 : 1;
@@ -249,7 +253,7 @@ export default function CreationsContent() {
                 return (
                   <article
                     key={project.id}
-                    className="absolute left-1/2 top-0 w-[min(72vw,520px)] sm:w-[min(70vw,560px)] md:w-[min(60vw,510px)]"
+                    className="absolute left-1/2 top-0 w-[min(100%,375px)] sm:w-[min(100%,504px)]"
                     style={{
                       transform: `translateX(calc(-50% + ${translateX}px)) rotateY(${rotateY}deg) scale(${scale})`,
                       transformStyle: "preserve-3d",

@@ -38,12 +38,12 @@ const olderLogs = [
 
 export default function LogsContent() {
   return (
-    <div className="h-full w-full max-h-[calc(100vh-176px)] overflow-y-auto pt-10 sm:pt-12 px-4 sm:px-6">
+    <div className="h-full w-full max-h-[calc(100vh-74px)] md:max-h-[calc(100vh-176px)] overflow-y-auto px-4 lg:px-6 pt-6 lg:pt-10 2xl:pt-12">
       <div className="flex h-full flex-col gap-6 max-w-285 mx-auto pb-10 sm:pb-12">
         <h1 className="text-center title18">Data Log Dump Initialized.</h1>
         <div className="flex flex-col gap-3">
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-primary px-2">
-            <p className="font-big text-lg font-bold tracking-[0.2em] text-dark">
+          <div className="flex flex-wrap items-center justify-between sm:gap-3 bg-primary px-2">
+            <p className="font-big text-[16px] sm:text-lg font-bold tracking-[0.2em] text-dark">
               {overview.title}
             </p>
             <span className="title16 !text-dark">Date: {overview.date}</span>
@@ -59,11 +59,11 @@ export default function LogsContent() {
             </span>
           </div>
         </div>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-3 md:gap-4 sm:grid-cols-2">
           {sections.map((section) => (
             <div
               key={section.title}
-              className="flex h-full flex-col justify-between border border-white/15 bg-black px-5 py-4 shadow-[0_0_24px_rgba(0,0,0,0.35)]"
+              className="flex h-full flex-col justify-between border border-white/15 bg-black p-3 md:px-5 md:py-4 shadow-[0_0_24px_rgba(0,0,0,0.35)]"
             >
               <div className="space-y-1">
                 <p className="font-big title18 font-bold text-primary">
@@ -90,15 +90,15 @@ export default function LogsContent() {
             />
           </div>
         </div>
-        <div className="space-y-1 border-t border-white/10 pt-6">
+        <div className="space-y-1 border-t border-white/10 pt-6 pb-8">
           <p className="title18">Older Logs:</p>
           <div className="space-y-2">
             {olderLogs.map((title) => (
               <div
                 key={title}
-                className="flex items-center justify-between border border-primary px-2 py-1 text-primary"
+                className="flex flex-col sm:flex-row sm:items-center justify-between border border-primary px-2 py-1 text-primary"
               >
-                <h1 className="title18 font-big text-primary font-bold">
+                <h1 className="text-[16px] sm:text-lg font-big text-primary font-bold">
                   {title}
                 </h1>
                 <p className="title16 text-primary">Date: {overview.date}</p>

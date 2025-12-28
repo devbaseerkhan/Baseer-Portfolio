@@ -39,7 +39,8 @@ const creations: Creation[] = [
     image:
       "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900'><defs><linearGradient id='g2' x1='10%' y1='0%' x2='90%' y2='100%'><stop offset='0%' stop-color='%2304040c'/><stop offset='50%' stop-color='%23232038'/><stop offset='100%' stop-color='%23b53b4f'/></linearGradient></defs><rect width='1600' height='900' fill='url(%23g2)'/><rect x='180' y='220' width='1240' height='460' fill='rgba(255,255,255,0.08)'/><text x='280' y='480' fill='%23f05f69' font-size='180' font-family='Arial Black'>VERMILLION</text></svg>",
     link: "#",
-    brief: "Blends editorial layout with immersive color theming and bold typography.",
+    brief:
+      "Blends editorial layout with immersive color theming and bold typography.",
     about:
       "Curated a fashion-first commerce experience with layered imagery, silky scrolling, and expressive copy to tell the brand story.",
     technologies: ["Next.js", "React", "TypeScript", "CSS", "Git"],
@@ -59,7 +60,8 @@ const creations: Creation[] = [
     image:
       "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900'><defs><linearGradient id='g3' x1='0%' y1='0%' x2='100%' y2='0%'><stop offset='0%' stop-color='%23222'/><stop offset='50%' stop-color='%23454545'/><stop offset='100%' stop-color='%23707070'/></linearGradient></defs><rect width='1600' height='900' fill='url(%23g3)'/><rect x='280' y='210' width='1040' height='480' rx='24' fill='rgba(0,0,0,0.45)'/><rect x='340' y='260' width='480' height='320' rx='18' fill='rgba(255,255,255,0.06)'/><rect x='860' y='340' width='240' height='180' rx='12' fill='rgba(255,255,255,0.08)'/></svg>",
     link: "#",
-    brief: "Modular studio site with CMS-driven sections and glassy device mocks.",
+    brief:
+      "Modular studio site with CMS-driven sections and glassy device mocks.",
     about:
       "Built a modular studio experience with CMS-driven case studies, layered glassmorphism panels, and device mockups.",
     technologies: ["Next.js", "React", "TypeScript", "GSAP", "Git"],
@@ -114,41 +116,33 @@ export default function CreationsContent() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    const maxIndex =
-      variant === "classic"
-        ? Math.max(0, creations.length - itemsPerView)
-        : creations.length - 1;
-    setActiveIndex((prev) => Math.min(prev, maxIndex));
-  }, [itemsPerView, variant]);
+  const maxIndex =
+    variant === "classic"
+      ? Math.max(0, creations.length - itemsPerView)
+      : creations.length - 1;
+  const currentIndex = Math.min(activeIndex, maxIndex);
 
   const trackStyle = useMemo(() => {
-    const translate = -(activeIndex * (100 / itemsPerView));
+    const translate = -(currentIndex * (100 / itemsPerView));
     return {
       width: `${(creations.length * 100) / itemsPerView}%`,
       transform: `translateX(${translate}%)`,
     };
-  }, [activeIndex, itemsPerView]);
+  }, [currentIndex, itemsPerView]);
 
-  const activeProject = detailsProject ?? creations[activeIndex];
+  const activeProject = detailsProject ?? creations[currentIndex];
 
   const next = () => {
     setActiveIndex((prev) => {
-      const maxIndex =
-        variant === "classic"
-          ? Math.max(0, creations.length - itemsPerView)
-          : creations.length - 1;
-      return prev >= maxIndex ? 0 : prev + 1;
+      const safePrev = Math.min(prev, maxIndex);
+      return safePrev >= maxIndex ? 0 : safePrev + 1;
     });
   };
 
   const prev = () => {
     setActiveIndex((prev) => {
-      const maxIndex =
-        variant === "classic"
-          ? Math.max(0, creations.length - itemsPerView)
-          : creations.length - 1;
-      return prev <= 0 ? maxIndex : prev - 1;
+      const safePrev = Math.min(prev, maxIndex);
+      return safePrev <= 0 ? maxIndex : safePrev - 1;
     });
   };
 
@@ -164,130 +158,124 @@ export default function CreationsContent() {
   };
 
   return (
-    <div className="h-full w-full overflow-hidden pt-10 sm:pt-12">
-      <div className="flex h-full flex-col gap-6">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col items-center gap-2">
+    <div className="h-full w-full max-h-[calc(100vh-74px)] md:max-h-[calc(100vh-176px)] overflow-y-auto overflow-x-hidden py-6 lg:py-10 2xl:py-12">
+      {detailsProject ? (
+        <ProjectDetails
+          project={detailsProject}
+          onBack={() => setDetailsProject(null)}
+        />
+      ) : (
+        <div className="w-full flex flex-col gap-6 2xl:gap-8">
+          <div className="flex flex-col gap-6 px-4 sm:px-6 lg:px-10">
             <h1 className="title18 text-center">Creations</h1>
-          </div>
-          {detailsProject ? (
-            <ProjectDetails
-              project={detailsProject}
-              onBack={() => setDetailsProject(null)}
-            />
-          ) : (
-            <div className="w-full px-4 sm:px-6 lg:px-9">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="title12 !text-info-light">Slider style:</span>
-                  <div className="flex rounded border border-primary">
-                    {(
-                      [
-                        { key: "classic", label: "Classic Rail" },
-                        { key: "cinematic", label: "Cinematic Focus" },
-                      ] satisfies { key: SliderVariant; label: string }[]
-                    ).map((option) => (
-                      <button
-                        key={option.key}
-                        type="button"
-                        onClick={() => setVariant(option.key)}
-                        className={`px-3 py-1 text-sm uppercase tracking-[0.14em] font-big font-bold transition ${
-                          variant === option.key
-                            ? "bg-primary text-dark"
-                            : "text-primary hover:bg-primary-20"
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={prev}
-                    className="flex justify-center items-center h-10 w-10 rounded-sm border border-primary bg-black/40 text-2xl text-primary hover:bg-primary-10 transition cursor-pointer"
-                    aria-label="Previous creation"
-                  >
-                    <IoChevronBackOutline />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={next}
-                    className="flex justify-center items-center h-10 w-10 rounded-sm border border-primary bg-black/40 text-2xl text-primary hover:bg-primary-10 transition cursor-pointer"
-                    aria-label="Next creation"
-                  >
-                    <IoChevronForwardOutline />
-                  </button>
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div className="flex flex-col gap-1">
+                <span className="title12 !text-info-light">Slider style:</span>
+                <div className="flex rounded border border-primary">
+                  {(
+                    [
+                      { key: "classic", label: "Classic Rail" },
+                      { key: "cinematic", label: "Cinematic Focus" },
+                    ] satisfies { key: SliderVariant; label: string }[]
+                  ).map((option) => (
+                    <button
+                      key={option.key}
+                      type="button"
+                      onClick={() => setVariant(option.key)}
+                      className={`px-3 py-1 text-sm uppercase tracking-[0.14em] font-big font-bold transition ${
+                        variant === option.key
+                          ? "bg-primary text-dark"
+                          : "text-primary hover:bg-primary-20"
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
                 </div>
               </div>
-              {variant === "classic" ? (
-                <div className="w-full overflow-hidden">
-                  <div
-                    className="flex transition-transform duration-500 ease-out"
-                    style={trackStyle}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={prev}
+                  className="flex justify-center items-center h-10 w-10 rounded-sm border border-primary bg-black/40 text-2xl text-primary hover:bg-primary-10 transition cursor-pointer"
+                  aria-label="Previous creation"
+                >
+                  <IoChevronBackOutline />
+                </button>
+                <button
+                  type="button"
+                  onClick={next}
+                  className="flex justify-center items-center h-10 w-10 rounded-sm border border-primary bg-black/40 text-2xl text-primary hover:bg-primary-10 transition cursor-pointer"
+                  aria-label="Next creation"
+                >
+                  <IoChevronForwardOutline />
+                </button>
+              </div>
+            </div>
+          </div>
+          {variant === "classic" ? (
+            <div className="h-full w-full overflow-hidden px-2 lg:px-6">
+              <div
+                className="flex transition-transform duration-500 ease-out"
+                style={trackStyle}
+              >
+                {creations.map((project) => (
+                  <article
+                    key={project.id}
+                    className="creation-card flex-shrink-0"
+                    style={{ width: `${100 / itemsPerView}%` }}
                   >
-                    {creations.map((project) => (
-                      <article
-                        key={project.id}
-                        className="creation-card flex-shrink-0"
-                        style={{ width: `${100 / itemsPerView}%` }}
-                      >
-                        <ProjectCard
-                          project={project}
-                          onViewDetails={(proj) => setDetailsProject(proj)}
-                        />
-                      </article>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="relative w-full overflow-visible px-2 sm:px-4 lg:px-6">
-                  <div
-                    className="relative flex items-center justify-center py-6 sm:py-10"
-                    style={{ perspective: "1800px" }}
-                  >
-                    {creations.map((project, index) => {
-                      const delta = cinematicDelta(index);
-                      const isHidden = Math.abs(delta) > 1;
-                      const translateX = delta * 380;
-                      const rotateY = delta * 45;
-                      const scale = delta === 0 ? 1 : 0.82;
-                      const opacity = Math.abs(delta) > 0 ? 0.55 : 1;
+                    <ProjectCard
+                      project={project}
+                      onViewDetails={(proj) => setDetailsProject(proj)}
+                    />
+                  </article>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div
+              className="relative min-h-180 w-full flex items-center justify-center"
+              style={{ perspective: "1800px" }}
+            >
+              {creations.map((project, index) => {
+                const delta = cinematicDelta(index);
+                const isHidden = Math.abs(delta) > 1;
+                const translateX = delta * 380;
+                const rotateY = delta * 45;
+                const scale = delta === 0 ? 1 : 0.82;
+                const opacity = Math.abs(delta) > 0 ? 0.55 : 1;
 
-                      return (
-                        <article
-                          key={project.id}
-                          className="absolute left-1/2 top-0 w-[min(72vw,520px)] sm:w-[min(70vw,560px)] md:w-[min(60vw,510px)]"
-                          style={{
-                            transform: `translateX(calc(-50% + ${translateX}px)) rotateY(${rotateY}deg) scale(${scale})`,
-                            transformStyle: "preserve-3d",
-                            opacity: isHidden ? 0 : opacity,
-                            zIndex: 10 - Math.abs(delta),
-                            transition:
-                              "transform 450ms ease, opacity 400ms ease, filter 400ms ease",
-                            filter:
-                              delta === 0
-                                ? "drop-shadow(0 16px 40px rgba(0,0,0,0.5))"
-                                : "drop-shadow(0 10px 24px rgba(0,0,0,0.4))",
-                            pointerEvents: delta === 0 ? "auto" : "none",
-                          }}
-                        >
-                          <ProjectCard
-                            project={project}
-                            priority={index === activeIndex}
-                            onViewDetails={(proj) => setDetailsProject(proj)}
-                          />
-                        </article>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+                return (
+                  <article
+                    key={project.id}
+                    className="absolute left-1/2 top-0 w-[min(72vw,520px)] sm:w-[min(70vw,560px)] md:w-[min(60vw,510px)]"
+                    style={{
+                      transform: `translateX(calc(-50% + ${translateX}px)) rotateY(${rotateY}deg) scale(${scale})`,
+                      transformStyle: "preserve-3d",
+                      opacity: isHidden ? 0 : opacity,
+                      zIndex: 10 - Math.abs(delta),
+                      transition:
+                        "transform 450ms ease, opacity 400ms ease, filter 400ms ease",
+                      filter:
+                        delta === 0
+                          ? "drop-shadow(0 16px 40px rgba(0,0,0,0.5))"
+                          : "drop-shadow(0 10px 24px rgba(0,0,0,0.4))",
+                      pointerEvents: delta === 0 ? "auto" : "none",
+                    }}
+                  >
+                    <ProjectCard
+                      project={project}
+                      priority={index === activeIndex}
+                      onViewDetails={(proj) => setDetailsProject(proj)}
+                    />
+                  </article>
+                );
+              })}
             </div>
           )}
         </div>
-      </div>
+      )}
     </div>
   );
 }

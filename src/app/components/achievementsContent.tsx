@@ -322,7 +322,7 @@ export default function AchievementsContent() {
           </div>
         </div>
         <div className="w-full flex flex-col justify-between">
-          <div className="p-5">
+          <div className="p-3 sm:p-5">
             <p
               className="title18 font-big font-semibold"
               style={{ color: rarity.pill }}
@@ -359,12 +359,12 @@ export default function AchievementsContent() {
       circumference * (1 - progressStats.completionPercent / 100);
 
     return (
-      <aside className="flex flex-col gap-4 sticky top-0">
+      <aside className="flex flex-col gap-2 sm:gap-4 sticky top-0">
         <div
-          className="flex flex-col items-center gap-4 rounded-sm border border-primary px-4 py-6"
+          className="flex flex-col items-center sm:gap-4 rounded-sm border border-primary px-3 sm:px-4 py-3 sm:py-6"
           style={{ background: progressVisuals.background }}
         >
-          <div className="relative h-36 w-36">
+          <div className="relative h-28 w-28 sm:h-36 sm:w-36">
             <svg
               viewBox="0 0 140 140"
               role="img"
@@ -393,7 +393,7 @@ export default function AchievementsContent() {
               />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="title26 font-big font-bold text-primary">
+              <span className="text-xl sm:text-[26px] font-big font-bold text-primary">
                 {progressStats.numerator}/{progressStats.totalCount}
               </span>
             </div>
@@ -418,15 +418,15 @@ export default function AchievementsContent() {
   };
 
   return (
-    <div className="h-full w-full overflow-hidden pt-10 sm:pt-12">
-      <div className="flex h-full flex-col gap-6">
-        <div className="flex flex-col gap-6 px-4 sm:px-6 lg:px-9">
+    <div className="h-full w-full overflow-hidden pt-6 lg:pt-10 2xl:pt-12">
+      <div className="flex h-full flex-col gap-4 xl:gap-6">
+        <div className="flex flex-col gap-6 sm:px-4 lg:px-6 2xl:px-9">
           <div className="flex flex-col items-center gap-2">
             <h1 className="title18 text-center">Achievements</h1>
           </div>
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-primary bg-primary-10 px-2 py-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-primary bg-primary-10 px-2 py-2">
             <div className="flex items-center gap-5">
-              <span className="title16 !text-info-light">Filter:</span>
+              <span className="title16 !text-info-light hidden md:block">Filter:</span>
               <div className="flex flex-wrap gap-4">
                 {statusOrder.map((status) => {
                   const token = statusTokens[status];
@@ -452,7 +452,6 @@ export default function AchievementsContent() {
                 })}
               </div>
             </div>
-
             <div className="flex items-center gap-3">
               <div className="flex rounded border border-primary">
                 {(["grid", "list"] as const).map((mode) => (
@@ -480,9 +479,9 @@ export default function AchievementsContent() {
             </div>
           </div>
         </div>
-        <div className="achievements-scroll h-full max-h-[calc(100vh-360px)] w-full overflow-y-auto px-4 sm:px-6 lg:px-9 pb-7">
+        <div className="achievements-scroll h-full max-h-[calc(100vh-234px)] sm:max-h-[calc(100vh-202px)] md:max-h-[calc(100vh-302px)] lg:max-h-[calc(100vh-352px)] w-full overflow-y-auto px-4 lg:px-6 2xl:px-9 pb-7">
           {viewMode === "grid" ? (
-            <div className="flex flex-wrap items-stretch gap-4">
+            <div className="flex flex-wrap items-stretch gap-3 xl:gap-4">
               {filtered.map((item) => {
                 const rarity = rarityTokens[item.rarity];
                 const status = statusTokens[item.status];
@@ -498,7 +497,7 @@ export default function AchievementsContent() {
                 return (
                   <article
                     key={item.id}
-                    className="relative flex flex-col w-full max-w-43.75"
+                    className="relative flex flex-col w-full max-w-[calc(50%-6px)] sm:max-w-[calc(33.33%-8px)] md:max-w-[calc(25%-9px)] xl:max-w-43.75"
                     style={{ opacity: isMuted ? 0.5 : 1 }}
                   >
                     <div
@@ -572,8 +571,8 @@ export default function AchievementsContent() {
             </div>
           ) : (
             <div className="w-full max-w-205 mx-auto">
-              <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)] relative">
-                <div className="sticky top-0">{renderProgressPanel()}</div>
+              <div className="grid gap-4 xl:gap-6 sm:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)] relative">
+                <div className="sm:sticky sm:top-0">{renderProgressPanel()}</div>
                 <div className="flex flex-col gap-3">
                   {statusOrder.map((statusKey) => {
                     const section = filtered.filter(

@@ -16,6 +16,7 @@ type NavigationDrawerProps = {
   items?: NavigationItem[];
   onSelect?: (label: string) => void;
   triggerClassName?: string;
+  activeLabel?: string;
 };
 
 const defaultDescription =
@@ -25,6 +26,7 @@ export default function NavigationDrawer({
   items,
   onSelect,
   triggerClassName = "",
+  activeLabel,
 }: NavigationDrawerProps) {
   const [open, setOpen] = useState(false);
   const fallbackItems = useMemo<NavigationItem[]>(
@@ -39,16 +41,18 @@ export default function NavigationDrawer({
   );
 
   const navigationItems = items?.length ? items : fallbackItems ?? [];
-  const [activeLabel, setActiveLabel] = useState(
+  const [internalActiveLabel, setInternalActiveLabel] = useState(
     navigationItems[0]?.label ?? ""
   );
+  const resolvedLabel = activeLabel ?? internalActiveLabel;
+  const currentLabel = navigationItems.some(
+    (item) => item.label === resolvedLabel
+  )
+    ? resolvedLabel
+    : navigationItems[0]?.label ?? "";
 
   const closeDrawer = () => setOpen(false);
   const openDrawer = () => setOpen(true);
-
-  useEffect(() => {
-    setActiveLabel(navigationItems[0]?.label ?? "");
-  }, [navigationItems]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -67,7 +71,7 @@ export default function NavigationDrawer({
         )}
         <Button
           label="navigation"
-          className="h-8.25 md:h-12.5"
+          className={`h-8.25 md:h-12.5 ${triggerClassName}`}
           onClick={openDrawer}
         />
       </div>
@@ -96,14 +100,14 @@ export default function NavigationDrawer({
                 <Header credits={false} className="!h-14.25" />
                 <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 gap-5">
                   {navigationItems.map((item) => {
-                    const isActive = item.label === activeLabel;
+                    const isActive = item.label === currentLabel;
                     return (
                       <TabButton
                         key={item.label}
                         label={item.label}
                         subtitle={item.description ?? defaultDescription}
                         onClick={() => {
-                          setActiveLabel(item.label);
+                          setInternalActiveLabel(item.label);
                           onSelect?.(item.label);
                           closeDrawer();
                         }}

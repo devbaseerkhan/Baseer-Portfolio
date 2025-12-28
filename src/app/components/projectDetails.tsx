@@ -94,10 +94,10 @@ export default function ProjectDetails({
 
   return (
     <>
-      <div className="w-full px-4 sm:px-6 lg:px-10 2x:px-[6%]">
+      <div className="w-full px-4 sm:px-6 xl:px-10 2xl:px-[6%]">
         <div className="flex flex-col gap-6">
           <h1 className="title18 text-center">Creations</h1>
-          <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
+          <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-[360px_minmax(0,1fr)] lg:grid-cols-[360px_minmax(0,1fr)]">
             <div className="flex flex-col gap-4">
               <div className="w-full border border-white/10 p-2.5 flex flex-col gap-3">
                 <div className="w-full flex flex-col gap-2">
@@ -189,16 +189,16 @@ export default function ProjectDetails({
                   <span>Location:</span>
                   <span className="text-primary">/projects/{project.id}</span>
                 </div>
-                <div className="grid gap-4 p-3 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="flex flex-col sm:flex-row md:flex-col xl:flex-row flex-wrap items-stretch gap-4 p-3">
                   {files.map((file, index) => (
                     <button
                       key={file.name}
                       type="button"
                       onClick={() => setPreviewIndex(index)}
-                      className="flex items-center justify-between gap-3 rounded-sm transition hover:bg-primary-10 cursor-pointer"
+                      className="flex flex-1 sm:basis-[calc(50%-16px)] md:basis-full xl:basis-[calc(50%-16px)] 2xl:basis-[calc(33.33%-16px)] items-center justify-between gap-3 rounded-sm transition hover:bg-primary-10 cursor-pointer"
                     >
                       <div className="flex items-center gap-3 text-left">
-                        <span className="flex h-12 w-12 items-center justify-center bg-primary-30 rounded-sm">
+                        <span className="flex h-12 w-12 min-h-12 min-w-12 items-center justify-center bg-primary-30 rounded-sm">
                           <LuImage className="text-primary text-2xl" />
                         </span>
                         <div className="flex flex-col leading-tight !text-info-light">
@@ -211,12 +211,12 @@ export default function ProjectDetails({
                 </div>
               </BoxStack>
 
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <Button label="View Project Demo" className="w-max px-4 py-2" />
+              <div className="flex flex-col xl:flex-row items-center justify-between gap-3">
+                <Button label="View Project Demo" className="xl:w-max px-4 py-2" />
                 <Button
                   label="Back to all projects"
                   variant="outlined"
-                  className="w-max px-4 py-2"
+                  className="xl:w-max px-4 py-2"
                   onClick={onBack}
                 />
               </div>

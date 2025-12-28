@@ -74,12 +74,12 @@ export default function PreviewingImage({
   const current = images[activeIndex] ?? images[0];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-sm">
-      <div className="h-screen w-full overflow-auto py-10 px-5">
-        <div className="relative h-full w-full flex flex-col justify-center gap-9 max-w-6xl mx-auto">
+    <div className="fixed inset-0 z-50 bg-black/10 backdrop-blur-sm overflow-y-auto">
+      <div className="flex items-center justify-center min-h-full w-full">
+        <div className="relative w-full h-max flex flex-col justify-center gap-9 max-w-6xl mx-auto py-10 px-5">
           <div className="flex flex-col items-center gap-1 text-center">
             <p className="title16">Previewing images from</p>
-            <h2 className="text-5xl font-big font-bold text-primary tracking-[0.16em]">
+            <h2 className="text-4xl sm:text-5xl font-big font-bold text-primary tracking-[0.16em]">
               {projectTitle}
             </h2>
           </div>
@@ -101,42 +101,42 @@ export default function PreviewingImage({
                 <button
                   type="button"
                   onClick={prev}
-                  className="ml-3 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white/50 transition hover:border-white hover:text-white"
+                  className="sm:ml-3 flex h-8 w-8 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white/50 transition hover:border-white hover:text-white"
                   aria-label="Previous image"
                 >
-                  <IoChevronBack className="text-2xl" />
+                  <IoChevronBack className="text-xl sm:text-2xl" />
                 </button>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center">
                 <button
                   type="button"
                   onClick={next}
-                  className="mr-3 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white/50 transition hover:border-white hover:text-white"
+                  className="sm:mr-3 flex h-8 w-8 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white/50 transition hover:border-white hover:text-white"
                   aria-label="Next image"
                 >
-                  <IoChevronForward className="text-2xl" />
+                  <IoChevronForward className="text-xl sm:text-2xl" />
                 </button>
               </div>
             </div>
 
-            <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+            <div className="mt-5 flex flex-wrap flex-col sm:flex-row sm:items-center justify-between gap-3">
               <span className="title16">
                 {activeIndex + 1} of {totalImages}
                 {current.label ? ` — ${current.label}` : ""}
               </span>
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap flex-col sm:flex-row items-center gap-3">
                 {liveLink ? (
                   <Button
                     label="View project live"
                     onClick={openLive}
-                    className="w-max px-4 py-2"
+                    className="w-full sm:w-max px-4 sm:py-2"
                   />
                 ) : null}
                 <Button
                   label="Close [ESC]"
                   variant="outlined"
                   onClick={onClose}
-                  className="w-max px-4 py-2"
+                  className="w-full sm:w-max px-4 sm:py-2"
                 />
               </div>
             </div>

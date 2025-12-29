@@ -1,15 +1,20 @@
 "use client";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Button from "./Button";
+import { fetchAchievements } from "@/lib/contentApi";
+import type {
+  AchievementRecord,
+  AchievementStatus,
+  AchievementRarity,
+} from "@/lib/contentTypes";
+import { fallbackAchievements } from "@/lib/fallbackContent";
 
-type AchievementStatus = "achieved" | "in-progress" | "todo";
-type AchievementRarity = "legendary" | "epic" | "rare" | "uncommon";
-
-type Achievement = {
+type UiAchievementStatus = "achieved" | "in-progress" | "todo";
+type UiAchievement = {
   id: string;
   title: string;
-  status: AchievementStatus;
+  status: UiAchievementStatus;
   rarity: AchievementRarity;
   description?: string;
   achievedOn?: string;
@@ -17,7 +22,7 @@ type Achievement = {
 };
 
 const statusTokens: Record<
-  AchievementStatus,
+  UiAchievementStatus,
   { label: string; tint: string; bar: string }
 > = {
   achieved: {
@@ -37,8 +42,8 @@ const statusTokens: Record<
   },
 };
 
-const statusOrder: AchievementStatus[] = ["achieved", "in-progress", "todo"];
-const statusPriority: Record<AchievementStatus, number> = {
+const statusOrder: UiAchievementStatus[] = ["achieved", "in-progress", "todo"];
+const statusPriority: Record<UiAchievementStatus, number> = {
   achieved: 0,
   "in-progress": 1,
   todo: 2,
@@ -85,145 +90,92 @@ const rarityIcon: Record<AchievementRarity, string> = {
   uncommon: "/achievements/rarity-uncommon.svg",
 };
 
-const achievements: Achievement[] = [
-  {
-    id: "legendary-stars",
-    title: "1000 stars on my project",
-    status: "achieved",
-    rarity: "legendary",
-    achievedOn: "14 / 02 / 2022",
-    description:
-      "I have contributed to Gutenberg, Moment.js and React repositories in GitHub.",
-  },
-  {
-    id: "personal-website",
-    title: "Release personal website",
-    status: "achieved",
-    rarity: "epic",
-    achievedOn: "14 / 02 / 2022",
-    description:
-      "The site you are looking at right now — yes, I did it! And it took me a few months.",
-  },
-  {
-    id: "oss-plugin",
-    title: "Developed my open source plugin",
-    status: "achieved",
-    rarity: "rare",
-    achievedOn: "14 / 02 / 2022",
-    description:
-      "Created a JS library for managing absolute positioned elements.",
-  },
-  {
-    id: "markup-master",
-    title: "Master of markup",
-    status: "achieved",
-    rarity: "epic",
-    description:
-      "Ship semantic, accessible HTML paired with efficient styling systems.",
-  },
-  {
-    id: "pixel-perfect-1",
-    title: "Pixel-perfect perfectionist",
-    status: "achieved",
-    rarity: "epic",
-    description: "Match comps to the pixel while preserving responsive sanity.",
-  },
-  {
-    id: "speed-demon",
-    title: '"Speed demon"',
-    status: "in-progress",
-    rarity: "rare",
-    description: "Make builds, bundles, and runtime interactions feel instant.",
-  },
-  {
-    id: "pixel-perfect-2",
-    title: "Pixel-perfect perfectionist",
-    status: "achieved",
-    rarity: "epic",
-    description: "Alternate skin unlocked.",
-    note: "Alternate skin unlocked",
-  },
-  {
-    id: "accessibility",
-    title: "Accessibility advocate",
-    status: "todo",
-    rarity: "uncommon",
-    description: "AA+ compliance, full keyboard flows, screen reader parity.",
-  },
-  {
-    id: "browser-compat",
-    title: '"Browser compatibility"',
-    status: "in-progress",
-    rarity: "rare",
-    description: "Polyfills, graceful degradation, and evergreen builds.",
-  },
-  {
-    id: "worth-noting",
-    title: "Additional worth noting event",
-    status: "todo",
-    rarity: "uncommon",
-    description: "Queued milestone in the next sprint cycle.",
-  },
-  {
-    id: "code-quality",
-    title: "Code quality guardian",
-    status: "in-progress",
-    rarity: "rare",
-    description: "Static analysis, linting, testing, and DX guardrails.",
-  },
-  {
-    id: "milestone",
-    title: "Another awesome milestone",
-    status: "achieved",
-    rarity: "epic",
-    achievedOn: "14 / 02 / 2022",
-    description: "Another major project landed with polish.",
-  },
-  {
-    id: "worth-noting-2",
-    title: "Additional worth noting event",
-    status: "todo",
-    rarity: "uncommon",
-    description: "Placeholder for the next notable win.",
-  },
-  {
-    id: "ui-polish",
-    title: "UI polish sprint",
-    status: "todo",
-    rarity: "uncommon",
-    description: "Micro-interactions, layout cleanup, and motion tweaks.",
-  },
-];
 
 export default function AchievementsContent() {
-  const [activeStatuses, setActiveStatuses] = useState<AchievementStatus[]>([
+  const [activeStatuses, setActiveStatuses] = useState<UiAchievementStatus[]>([
     "achieved",
     "in-progress",
     "todo",
   ]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [achievements, setAchievements] = useState<UiAchievement[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [hasFetched, setHasFetched] = useState(false);
+
+  const mapStatus = (status: AchievementStatus | null | undefined): UiAchievementStatus => {
+    if (status === "in_progress") return "in-progress";
+    if (status === "todo") return "todo";
+    return "achieved";
+  };
+
+  const mapAchievement = (record: AchievementRecord): UiAchievement => ({
+    id: record.id,
+    title: record.title,
+    status: mapStatus(record.status),
+    rarity: record.rarity,
+    description: record.description ?? undefined,
+    achievedOn: record.achieved_on ?? undefined,
+    note: record.note ?? undefined,
+  });
+
+  useEffect(() => {
+    let mounted = true;
+    fetchAchievements()
+      .then((result) => {
+        if (!mounted) return;
+        if (result.data.length) {
+          setAchievements(result.data.map(mapAchievement));
+        } else {
+          setAchievements([]);
+        }
+      })
+      .catch(() => {
+        setAchievements([]);
+      })
+      .finally(() => {
+        if (mounted) {
+          setHasFetched(true);
+          setLoading(false);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const fallbackMapped = useMemo(
+    () => fallbackAchievements.map(mapAchievement),
+    [mapAchievement],
+  );
+
+  const displayAchievements =
+    achievements.length > 0
+      ? achievements
+      : hasFetched
+      ? fallbackMapped
+      : [];
 
   const filtered = useMemo(
     () =>
-      achievements
+      displayAchievements
         .filter((item) => activeStatuses.includes(item.status))
         .sort((a, b) => statusPriority[a.status] - statusPriority[b.status]),
-    [activeStatuses]
+    [activeStatuses, displayAchievements]
   );
 
   const progressStats = useMemo(() => {
-    const totalCount = achievements.length;
-    const achievedCount = achievements.filter(
+    const totalCount = displayAchievements.length;
+    const achievedCount = displayAchievements.filter(
       (item) => item.status === "achieved"
     ).length;
-    const inProgressCount = achievements.filter(
+    const inProgressCount = displayAchievements.filter(
       (item) => item.status === "in-progress"
     ).length;
-    const todoCount = achievements.filter(
+    const todoCount = displayAchievements.filter(
       (item) => item.status === "todo"
     ).length;
 
-    const numeratorByStatus: Record<AchievementStatus, number> = {
+    const numeratorByStatus: Record<UiAchievementStatus, number> = {
       achieved: achievedCount,
       "in-progress": inProgressCount,
       todo: todoCount,
@@ -257,7 +209,7 @@ export default function AchievementsContent() {
       completionPercent,
       label,
     };
-  }, [activeStatuses]);
+  }, [displayAchievements, activeStatuses]);
 
   const progressVisuals = useMemo(() => {
     return {
@@ -267,7 +219,7 @@ export default function AchievementsContent() {
     };
   }, []);
 
-  const toggleStatus = (status: AchievementStatus) => {
+  const toggleStatus = (status: UiAchievementStatus) => {
     setActiveStatuses((prev) =>
       prev.includes(status)
         ? prev.filter((value) => value !== status)
@@ -278,7 +230,7 @@ export default function AchievementsContent() {
   const resetFilters = () =>
     setActiveStatuses(["achieved", "in-progress", "todo"]);
 
-  const renderListCard = (item: Achievement) => {
+  const renderListCard = (item: UiAchievement) => {
     const rarity = rarityTokens[item.rarity];
     const statusToken = statusTokens[item.status];
     const iconSrc = rarityIcon[item.rarity];
@@ -423,6 +375,9 @@ export default function AchievementsContent() {
         <div className="flex flex-col gap-6 sm:px-4 lg:px-6 2xl:px-9">
           <div className="flex flex-col items-center gap-2">
             <h1 className="title18 text-center">Achievements</h1>
+            <span className="text-xs uppercase tracking-[0.18em] text-info-light">
+              {loading && !hasFetched ? "Syncing from Supabase..." : "CMS synced"}
+            </span>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-primary bg-primary-10 px-2 py-2">
             <div className="flex items-center gap-5">
@@ -479,7 +434,14 @@ export default function AchievementsContent() {
             </div>
           </div>
         </div>
-        <div className="achievements-scroll h-full max-h-[calc(100vh-234px)] sm:max-h-[calc(100vh-202px)] md:max-h-[calc(100vh-302px)] lg:max-h-[calc(100vh-352px)] w-full overflow-y-auto px-4 lg:px-6 2xl:px-9 pb-7">
+        {displayAchievements.length === 0 ? (
+          <div className="flex items-center justify-center py-10 text-sm uppercase tracking-[0.18em] text-info-light">
+            {loading && !hasFetched
+              ? "Syncing achievements..."
+              : "No achievements yet"}
+          </div>
+        ) : (
+          <div className="achievements-scroll h-full max-h-[calc(100vh-234px)] sm:max-h-[calc(100vh-202px)] md:max-h-[calc(100vh-302px)] lg:max-h-[calc(100vh-352px)] w-full overflow-y-auto px-4 lg:px-6 2xl:px-9 pb-7">
           {viewMode === "grid" ? (
             <div className="flex flex-wrap items-stretch gap-3 xl:gap-4">
               {filtered.map((item) => {
@@ -610,6 +572,7 @@ export default function AchievementsContent() {
             </div>
           )}
         </div>
+        )}
       </div>
     </div>
   );

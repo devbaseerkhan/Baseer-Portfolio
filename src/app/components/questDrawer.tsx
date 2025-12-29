@@ -1,8 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { IoSettingsOutline } from "react-icons/io5";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoSettingsOutline } from "react-icons/io5";
 import QuestBlock from "./questBlock";
 
 export default function QuestDrawer() {
@@ -58,10 +57,18 @@ export default function QuestDrawer() {
       <button
         type="button"
         onClick={() => (open ? closeDrawer() : openDrawer())}
-        className="fixed bottom-4 lg:right-6 xl:right-10 2xl:right-20 z-50 flex h-12 w-12 items-center justify-center cursor-pointer rounded-full border-2 border-white/20 bg-primary text-white shadow-lg shadow-black/40 transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black 2xl:hidden"
+        className="fixed bottom-4 right-6 xl:right-10 2xl:right-20 z-50 hidden h-12 w-12 items-center justify-center cursor-pointer rounded-full border-2 border-white/20 bg-primary text-white shadow-lg shadow-black/40 transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black lg:flex 2xl:hidden"
         aria-label={open ? "Close quests" : "Open quests"}
       >
         <IoSettingsOutline className="text-2xl" />
+      </button>
+      <button
+        type="button"
+        onClick={() => (open ? closeDrawer() : openDrawer())}
+        className="fixed right-0 top-1/2 z-50 flex h-12 w-3 rounded-tl-2xl rounded-bl-2xl -translate-y-1/2 cursor-pointer items-center justify-center bg-primary shadow-[0_0_12px_rgba(0,0,0,0.45)] transition-opacity duration-200 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black lg:hidden"
+        aria-label={open ? "Close quests" : "Open quests"}
+      >
+        <span className="sr-only">{open ? "Close quests" : "Open quests"}</span>
       </button>
 
       {mounted ? (

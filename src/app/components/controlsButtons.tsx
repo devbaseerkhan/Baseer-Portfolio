@@ -256,12 +256,6 @@ export default function ControlsButtons({
         variant="outlined"
         className="border-0"
       />
-      <Button
-        label="Visual Settings"
-        icon={<IoSettingsOutline />}
-        variant="outlined"
-        className="border-white/10"
-      />
     </div>
   );
 }

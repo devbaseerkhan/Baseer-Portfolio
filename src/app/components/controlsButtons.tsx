@@ -16,6 +16,9 @@ type Track = {
   volume?: number;
 };
 
+const MUSIC_ENABLED_KEY = "controls-music-enabled";
+const SFX_ENABLED_KEY = "controls-sfx-enabled";
+
 const tracks: Track[] = [
   {
     id: "retro-chase",
@@ -61,6 +64,7 @@ export default function ControlsButtons({
 }: ControlsButtonsProps) {
   const [isMusicOn, setIsMusicOn] = useState(true);
   const [sfxOn, setSfxOn] = useState(true);
+  const [settingsReady, setSettingsReady] = useState(false);
   const [selectedTrackId, setSelectedTrackId] = useState(tracks[0].id);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hasStartedRef = useRef(false);
@@ -115,12 +119,12 @@ export default function ControlsButtons({
 
     if (isMusicOn) {
       audio.pause();
-      setIsMusicOn(false);
+      setMusicState(false);
       return;
     }
 
     const started = await playTrack(track);
-    setIsMusicOn(started);
+    setMusicState(started);
   };
 
   const handleTrackChange: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -147,7 +151,48 @@ export default function ControlsButtons({
   };
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    const storedMusic = window.localStorage.getItem(MUSIC_ENABLED_KEY);
+    const storedSfx = window.localStorage.getItem(SFX_ENABLED_KEY);
+    if (storedMusic !== null) {
+      setIsMusicOn(storedMusic === "true");
+    }
+    if (storedSfx !== null) {
+      setSfxOn(storedSfx === "true");
+    }
+    setSettingsReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!settingsReady || typeof window === "undefined") return;
+    window.localStorage.setItem(MUSIC_ENABLED_KEY, String(isMusicOn));
+  }, [isMusicOn, settingsReady]);
+
+  useEffect(() => {
+    if (!settingsReady || typeof window === "undefined") return;
+    window.localStorage.setItem(SFX_ENABLED_KEY, String(sfxOn));
+  }, [settingsReady, sfxOn]);
+
+  const setMusicState = useCallback(
+    (enabled: boolean) => {
+      setIsMusicOn(enabled);
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(MUSIC_ENABLED_KEY, String(enabled));
+      }
+    },
+    [],
+  );
+
+  const setSfxState = useCallback((enabled: boolean) => {
+    setSfxOn(enabled);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(SFX_ENABLED_KEY, String(enabled));
+    }
+  }, []);
+
+  useEffect(() => {
     const track = getTrack(selectedTrackId);
+    if (!settingsReady) return;
     if (isMusicOn) {
       void playTrack(track);
     } else {
@@ -161,7 +206,7 @@ export default function ControlsButtons({
 
   // Try to kick off playback shortly after mount (helps default-on behavior).
   useEffect(() => {
-    if (!isMusicOn) return;
+    if (!settingsReady || !isMusicOn) return;
     const track = getTrack(selectedTrackId);
     const timer = window.setTimeout(() => {
       if (!hasStartedRef.current) {
@@ -173,6 +218,7 @@ export default function ControlsButtons({
 
   // Initialize audio on mount so default-on can start as soon as allowed.
   useEffect(() => {
+    if (!settingsReady) return;
     const track = getTrack(selectedTrackId);
     const audio = ensureAudio();
     if (!audio) return;
@@ -183,10 +229,10 @@ export default function ControlsButtons({
       audio.load();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // run once on mount
+  }, [applyTrackSettings, ensureAudio, getTrack, isMusicOn, playTrack, selectedTrackId, settingsReady]);
 
   useEffect(() => {
-    if (!isMusicOn) return;
+    if (!settingsReady || !isMusicOn) return;
     const onFirstInteraction = () => {
       if (hasStartedRef.current) return;
       const track = getTrack(selectedTrackId);
@@ -208,8 +254,9 @@ export default function ControlsButtons({
   );
 
   useEffect(() => {
+    if (!settingsReady) return;
     broadcastSfx(sfxOn);
-  }, [sfxOn]);
+  }, [settingsReady, sfxOn]);
 
   return (
     <div
@@ -254,7 +301,7 @@ export default function ControlsButtons({
             <CgCloseR className="text-3xl" />
           )
         }
-        onClick={() => setSfxOn((prev) => !prev)}
+        onClick={() => setSfxState(!sfxOn)}
         variant="outlined"
         className="border-0"
       />

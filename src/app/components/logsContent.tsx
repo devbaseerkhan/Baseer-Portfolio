@@ -80,16 +80,6 @@ export default function LogsContent() {
             </div>
           ))}
         </div>
-        <div className="flex justify-center">
-          <div className="w-full max-w-72 sm:max-w-80">
-            <Button
-              label="Preview Visual Records"
-              icon={<MdOutlineImage className="text-xl" />}
-              variant="outlined"
-              className="bg-transparent text-primary hover:border-primary-70"
-            />
-          </div>
-        </div>
         <div className="space-y-1 border-t border-white/10 pt-6 pb-8">
           <p className="title18">Older Logs:</p>
           <div className="space-y-2">

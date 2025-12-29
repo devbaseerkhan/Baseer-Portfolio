@@ -18,15 +18,6 @@ const themeOptions: ThemeOption[] = [
   { key: "secondary", label: "Secondary", color: "#429dd1" },
 ];
 
-function getInitialKey(): ThemeKey {
-  if (typeof window === "undefined") return "primary";
-  const saved = window.localStorage.getItem("theme-primary-key") as ThemeKey | null;
-  if (saved && themeOptions.some((option) => option.key === saved)) {
-    return saved;
-  }
-  return "primary";
-}
-
 function hexToRgb(hex: string) {
   const normalized = hex.replace("#", "");
   const bigint = parseInt(normalized, 16);
@@ -71,7 +62,8 @@ export default function ThemeSwitcher() {
   const [open, setOpen] = useState(false);
   const [trayOpen, setTrayOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
-  const [activeKey, setActiveKey] = useState<ThemeKey>(getInitialKey);
+  const [activeKey, setActiveKey] = useState<ThemeKey>("primary");
+  const [hasHydrated, setHasHydrated] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const activeColor = useMemo(
@@ -81,8 +73,18 @@ export default function ThemeSwitcher() {
 
   useEffect(() => {
     applyPrimaryColor(activeColor);
-    window.localStorage.setItem("theme-primary-key", activeKey);
-  }, [activeColor, activeKey]);
+    if (hasHydrated) {
+      window.localStorage.setItem("theme-primary-key", activeKey);
+    }
+  }, [activeColor, activeKey, hasHydrated]);
+
+  useEffect(() => {
+    const saved = window.localStorage.getItem("theme-primary-key") as ThemeKey | null;
+    if (saved && themeOptions.some((option) => option.key === saved)) {
+      setActiveKey(saved);
+    }
+    setHasHydrated(true);
+  }, []);
 
   const expanded = trayOpen || hovered;
   const slideClass = expanded

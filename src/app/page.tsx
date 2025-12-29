@@ -24,15 +24,5 @@ const navTabs = [
 ];
 
 export default function Home() {
-  return (
-    <AppLayout
-      tabs={navTabs}
-      // mobileIntro={
-      //   <h1 className="text-center text-sm md:text-lg font-iceland leading-none w-full sm:max-w-[70%] mx-auto">
-      //     Swimming through a vast network of interconnected devices and
-      //     servers, spreading joy and whimsy to users across the globe
-      //   </h1>
-      // }
-    />
-  );
+  return <AppLayout tabs={navTabs} />;
 }

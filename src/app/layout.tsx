@@ -12,6 +12,10 @@ const bigShoulder = Big_Shoulders({
   variable: "--font-big-shoulders",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  // Big Shoulders lacks fallback metrics in Next's map; skip adjustment to silence warnings.
+  adjustFontFallback: false,
+  fallback: ["system-ui", "sans-serif"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${iceland.variable} ${bigShoulder.variable}`}>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }

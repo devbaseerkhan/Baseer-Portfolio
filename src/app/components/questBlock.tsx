@@ -1,6 +1,5 @@
 import Image from "next/image";
 import type React from "react";
-import Button from "./Button";
 import Badge from "./Badge";
 import bronz from "../../../public/bronz.png";
 import gold from "../../../public/gold.png";

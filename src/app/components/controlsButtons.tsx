@@ -1,9 +1,8 @@
 "use client";
 
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CgCheckR, CgCloseR } from "react-icons/cg";
-import { IoSettingsOutline } from "react-icons/io5";
 import Button from "./Button";
 
 type ControlsButtonsProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -72,9 +71,12 @@ export default function ControlsButtons({
     );
   };
 
-  const getTrack = (id: string) => tracks.find((t) => t.id === id) ?? tracks[0];
+  const getTrack = useCallback(
+    (id: string) => tracks.find((t) => t.id === id) ?? tracks[0],
+    []
+  );
 
-  const ensureAudio = () => {
+  const ensureAudio = useCallback(() => {
     if (typeof Audio === "undefined") return null;
     if (!audioRef.current) {
       const audio = new Audio();
@@ -84,14 +86,14 @@ export default function ControlsButtons({
       audioRef.current = audio;
     }
     return audioRef.current;
-  };
+  }, []);
 
-  const applyTrackSettings = (audio: HTMLAudioElement, track: Track) => {
+  const applyTrackSettings = useCallback((audio: HTMLAudioElement, track: Track) => {
     audio.src = track.src;
     audio.volume = track.volume ?? 0.3;
-  };
+  }, []);
 
-  const playTrack = async (track: Track) => {
+  const playTrack = useCallback(async (track: Track) => {
     const audio = ensureAudio();
     if (!audio) return false;
     audio.pause();
@@ -101,10 +103,10 @@ export default function ControlsButtons({
       await audio.play();
       hasStartedRef.current = true;
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
-  };
+  }, [applyTrackSettings, ensureAudio]);
 
   const handleToggleMusic = async () => {
     const track = getTrack(selectedTrackId);
@@ -155,7 +157,7 @@ export default function ControlsButtons({
         applyTrackSettings(audio, track);
       }
     }
-  }, [isMusicOn]);
+  }, [applyTrackSettings, ensureAudio, getTrack, isMusicOn, playTrack, selectedTrackId]);
 
   // Try to kick off playback shortly after mount (helps default-on behavior).
   useEffect(() => {
@@ -167,7 +169,7 @@ export default function ControlsButtons({
       }
     }, 250);
     return () => window.clearTimeout(timer);
-  }, [isMusicOn, selectedTrackId]);
+  }, [getTrack, isMusicOn, playTrack, selectedTrackId]);
 
   // Initialize audio on mount so default-on can start as soon as allowed.
   useEffect(() => {
@@ -193,7 +195,7 @@ export default function ControlsButtons({
     window.addEventListener("pointerdown", onFirstInteraction, { once: true });
     return () =>
       window.removeEventListener("pointerdown", onFirstInteraction);
-  }, [isMusicOn, selectedTrackId]);
+  }, [getTrack, isMusicOn, playTrack, selectedTrackId]);
 
   useEffect(
     () => () => {

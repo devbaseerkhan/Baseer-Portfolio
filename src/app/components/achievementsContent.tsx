@@ -280,13 +280,11 @@ export default function AchievementsContent() {
 
   const renderListCard = (item: Achievement) => {
     const rarity = rarityTokens[item.rarity];
-    const status = statusTokens[item.status];
+    const statusToken = statusTokens[item.status];
     const iconSrc = rarityIcon[item.rarity];
     const isInProgress = item.status === "in-progress";
     const isTodo = item.status === "todo";
     const isMuted = isInProgress || isTodo;
-    const statusLabel =
-      isTodo || isInProgress ? (isTodo ? "In queue" : "In progress") : null;
     const cardHoverClasses = isMuted
       ? ""
       : "hover:shadow-[0_0_22px_var(--rarity-glow)] hover:border-[var(--rarity-border)]";
@@ -344,7 +342,9 @@ export default function AchievementsContent() {
             style={{ background: rarity.bgLinear }}
           >
             <p className="title12">
-              {item.achievedOn ? `Achieved: ${item.achievedOn}` : status.label}
+              {item.achievedOn
+                ? `Achieved: ${item.achievedOn}`
+                : statusToken.label}
             </p>
           </div>
         </div>
@@ -484,7 +484,6 @@ export default function AchievementsContent() {
             <div className="flex flex-wrap items-stretch gap-3 xl:gap-4">
               {filtered.map((item) => {
                 const rarity = rarityTokens[item.rarity];
-                const status = statusTokens[item.status];
                 const iconSrc = rarityIcon[item.rarity];
                 const isInProgress = item.status === "in-progress";
                 const isTodo = item.status === "todo";

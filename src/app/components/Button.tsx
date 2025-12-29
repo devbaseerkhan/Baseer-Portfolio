@@ -1,7 +1,5 @@
-/* eslint-disable react/button-has-type */
 "use client";
 
-import Image from "next/image";
 import {
   useCallback,
   useEffect,
@@ -16,29 +14,25 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   label: ReactNode;
   variant?: ButtonVariant;
   icon?: ReactNode;
-  imgSrc?: string | undefined;
   className?: string;
 };
 
 const variantClasses: Record<ButtonVariant, string> = {
-  outlined:
-    "border-[var(--color-primary)] text-primary bg-transparent",
-  contained:
-    "border-[var(--color-primary)] bg-primary text-dark",
+  outlined: "border-[var(--color-primary)] text-primary bg-transparent",
+  contained: "border-[var(--color-primary)] bg-primary text-dark",
 };
 
 export default function Button({
   label,
   variant = "contained",
   icon,
-  imgSrc,
   className = "",
   type = "button",
   onMouseEnter,
   onClick,
   ...rest
 }: ButtonProps) {
-  const hasDecoration = Boolean(icon || imgSrc);
+  const hasDecoration = Boolean(icon);
   const justifyClass = hasDecoration ? "justify-between" : "justify-center";
   const audioCtxRef = useRef<AudioContext | null>(null);
   const soundEnabledRef = useRef(true);
@@ -97,23 +91,10 @@ export default function Button({
       onClick={handleClick}
       {...rest}
     >
-      <span>
-        {label}
-      </span>
+      <span>{label}</span>
 
       {hasDecoration ? (
-        <span className="flex items-center justify-center">
-          {icon ? (
-            icon
-          ) : (
-            <Image
-              src={imgSrc}
-              alt="btn icon"
-              className="h-5 w-5 object-contain"
-              loading="lazy"
-            />
-          )}
-        </span>
+        <span className="flex items-center justify-center">{icon && icon}</span>
       ) : null}
     </button>
   );

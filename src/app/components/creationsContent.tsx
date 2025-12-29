@@ -145,8 +145,6 @@ export default function CreationsContent() {
     };
   }, [currentIndex, itemsPerView, slideWidthPercent]);
 
-  const activeProject = detailsProject ?? creations[currentIndex];
-
   const next = () => {
     setActiveIndex((prev) => {
       const safePrev = Math.min(prev, maxIndex);
@@ -237,7 +235,7 @@ export default function CreationsContent() {
                 {creations.map((project) => (
                   <article
                     key={project.id}
-                    className="creation-card flex-shrink-0"
+                    className="creation-card shrink-0"
                     style={{ width: `${100 / creations.length}%` }}
                   >
                     <ProjectCard

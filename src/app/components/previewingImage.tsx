@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { IoChevronBack, IoChevronForward, IoClose } from "react-icons/io5";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import Button from "./Button";
 
 type PreviewImage = {

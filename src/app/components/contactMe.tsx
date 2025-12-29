@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { IoClose } from "react-icons/io5";
 import Button from "./Button";
 
 type ContactMeProps = {
@@ -69,7 +68,7 @@ export default function ContactMe({ open, onClose }: ContactMeProps) {
                   <textarea
                     required
                     placeholder="Hi, I write to you about..."
-                    className="min-h-[9rem] border border-white/25 bg-black/60 px-3 font-iceland text-md tracking-[0.12em] uppercase placeholder:text-white/40 focus:border-white focus:outline-none"
+                    className="min-h-36 border border-white/25 bg-black/60 px-3 font-iceland text-md tracking-[0.12em] uppercase placeholder:text-white/40 focus:border-white focus:outline-none"
                   />
                 </div>
               </div>

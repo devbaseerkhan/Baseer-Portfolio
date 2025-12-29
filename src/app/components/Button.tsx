@@ -92,7 +92,7 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`inline-flex w-full items-center ${justifyClass} gap-1.5 lg:gap-3 px-1.5 lg:px-2.5 uppercase font-big text-lg font-bold tracking-[0.18em] border transition duration-150 hover:translate-y-px active:translate-y-0 ${variantClasses[variant]} ${className}`}
+      className={`inline-flex w-full items-center ${justifyClass} cursor-pointer gap-1.5 lg:gap-3 px-1.5 lg:px-2.5 uppercase font-big text-lg font-bold tracking-[0.18em] border transition duration-150 hover:translate-y-px active:translate-y-0 ${variantClasses[variant]} ${className}`}
       onMouseEnter={handleMouseEnter}
       onClick={handleClick}
       {...rest}

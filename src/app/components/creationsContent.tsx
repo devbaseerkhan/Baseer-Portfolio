@@ -23,6 +23,18 @@ export default function CreationsContent() {
   const [loading, setLoading] = useState(true);
   const [hasFetched, setHasFetched] = useState(false);
 
+  const normalizeDriveUrl = (url?: string | null) => {
+    if (!url) return url ?? undefined;
+    if (url.includes("drive.google.com/file/d/")) {
+      const parts = url.split("/d/")[1]?.split("/");
+      const id = parts?.[0];
+      if (id) {
+        return `https://drive.google.com/uc?export=view&id=${id}`;
+      }
+    }
+    return url;
+  };
+
   const mapProject = useCallback((record: ProjectRecord): Creation => ({
     id: record.id,
     title: record.title,
@@ -36,13 +48,18 @@ export default function CreationsContent() {
         : "In progress"),
     description: record.summary ?? record.description ?? "Project update.",
     image:
-      record.image_url ??
+      normalizeDriveUrl(record.image_url) ??
       "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900'><rect width='1600' height='900' fill='%230a0a0f'/><text x='50%' y='50%' fill='%23e84a4a' font-size='48' font-family='Arial' text-anchor='middle'>Project thumbnail</text></svg>",
     link: record.live_url ?? "#",
     brief: record.brief ?? undefined,
     about: record.about ?? undefined,
     technologies: record.tech_stack ?? undefined,
-    files: record.files ?? undefined,
+    files: record.files
+      ? record.files.map((file) => ({
+          ...file,
+          preview: normalizeDriveUrl(file.preview),
+        }))
+      : undefined,
   }), []);
 
   const fallbackMapped = useMemo(

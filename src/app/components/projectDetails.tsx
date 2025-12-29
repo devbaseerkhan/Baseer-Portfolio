@@ -92,6 +92,11 @@ export default function ProjectDetails({
     [files, project.title]
   );
 
+  const handleViewDemo = () => {
+    if (!project.link || project.link === "#") return;
+    window.open(project.link, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <>
       <div className="w-full px-4 sm:px-6 xl:px-10 2xl:px-[6%]">
@@ -212,7 +217,11 @@ export default function ProjectDetails({
               </BoxStack>
 
               <div className="flex flex-col xl:flex-row items-center justify-between gap-3">
-                <Button label="View Project Demo" className="xl:w-max px-4 py-2" />
+                <Button
+                  label="View Project Demo"
+                  className="xl:w-max px-4 py-2"
+                  onClick={handleViewDemo}
+                />
                 <Button
                   label="Back to all projects"
                   variant="outlined"

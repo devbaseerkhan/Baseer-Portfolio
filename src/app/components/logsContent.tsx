@@ -15,11 +15,11 @@ type LogEntry = {
   location?: string;
   status?: string;
   publishedAt?: string;
+  project?: string;
 };
 
 export default function LogsContent() {
-  const [overview, setOverview] = useState<LogEntry | null>(null);
-  const [sections, setSections] = useState<LogEntry[]>([]);
+  const [recentLogs, setRecentLogs] = useState<LogEntry[]>([]);
   const [olderLogs, setOlderLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [hasFetched, setHasFetched] = useState(false);
@@ -32,6 +32,7 @@ export default function LogsContent() {
     location: record.location ?? undefined,
     status: record.status ?? undefined,
     publishedAt: record.published_at ?? undefined,
+    project: record.project ?? undefined,
   }), []);
 
   const fallbackMapped = useMemo(() => fallbackLogs.map(mapLog), [mapLog]);
@@ -43,19 +44,6 @@ export default function LogsContent() {
       ...latest,
       publishedAt: latest.publishedAt ?? "—",
     };
-  }, [fallbackMapped]);
-
-  const fallbackSections = useMemo(() => {
-    const latest = fallbackMapped[0];
-    if (!latest?.body) return [];
-    return latest.body
-      .split(/\n\n+/)
-      .filter(Boolean)
-      .map((text, index) => ({
-        id: `${latest.id}-section-${index}`,
-        title: latest.title,
-        body: text,
-      }));
   }, [fallbackMapped]);
 
   const fallbackOlderLogs = useMemo(
@@ -70,39 +58,16 @@ export default function LogsContent() {
       .then((result) => {
         if (!mounted) return;
         if (!result.data.length) {
-          setOverview(fallbackOverview);
-          setSections(fallbackSections);
+          setRecentLogs(fallbackMapped.slice(0, 4));
           setOlderLogs(fallbackOlderLogs);
           return;
         }
         const mapped = result.data.map(mapLog);
-        const [latest, ...rest] = mapped;
-        if (latest) {
-          setOverview({
-            ...(fallbackOverview ?? {}),
-            ...latest,
-            publishedAt: latest.publishedAt ?? fallbackOverview?.publishedAt,
-          });
-          const sectionBodies = latest.body
-            ? latest.body.split(/\n\n+/).filter(Boolean)
-            : [];
-          if (sectionBodies.length) {
-            setSections(
-              sectionBodies.map((text, index) => ({
-                id: `${latest.id}-section-${index}`,
-                title: latest.title,
-                body: text,
-              })),
-            );
-          }
-        }
-        if (rest.length) {
-          setOlderLogs(rest);
-        }
+        setRecentLogs(mapped.slice(0, 4));
+        setOlderLogs(mapped.slice(4));
       })
       .catch(() => {
-        setOverview(fallbackOverview);
-        setSections(fallbackSections);
+        setRecentLogs(fallbackMapped.slice(0, 4));
         setOlderLogs(fallbackOlderLogs);
       })
       .finally(() => {
@@ -116,14 +81,14 @@ export default function LogsContent() {
     };
   }, []);
 
-  const displayOverview = overview ?? fallbackOverview;
-  const displaySections =
-    sections.length || !hasFetched ? sections : fallbackSections;
+  const displayRecent =
+    recentLogs.length || !hasFetched ? recentLogs : fallbackMapped.slice(0, 4);
   const displayOlderLogs =
     olderLogs.length || !hasFetched ? olderLogs : fallbackOlderLogs;
 
   const safeOverview =
-    displayOverview ?? {
+    displayRecent[0] ??
+    fallbackOverview ?? {
       id: "no-log",
       title: "No logs yet",
       body: "",
@@ -164,25 +129,36 @@ export default function LogsContent() {
           </div>
         </div>
         <div className="grid gap-3 md:gap-4 sm:grid-cols-2">
-          {displaySections.map((section) => (
-            <div
-              key={section.id}
-              className="flex h-full flex-col justify-between border border-white/15 bg-black p-3 md:px-5 md:py-4 shadow-[0_0_24px_rgba(0,0,0,0.35)]"
-            >
-              <div className="space-y-1">
-                <p className="font-big title18 font-bold text-primary">
-                  {section.title}
-                </p>
-                <p className="title14 !text-info-light">{section.body}</p>
-              </div>
-              <button
-                type="button"
-                className="mt-2 w-max cursor-pointer text-sm tracking-widest text-primary transition uppercase hover:text-primary-70"
+          {displayRecent.map((entry) => {
+            const snippet =
+              entry.body.length > 200
+                ? `${entry.body.slice(0, 200)}…`
+                : entry.body || "No details provided.";
+            return (
+              <div
+                key={entry.id}
+                className="flex h-full flex-col justify-between border border-white/15 bg-black p-3 md:px-5 md:py-4 shadow-[0_0_24px_rgba(0,0,0,0.35)]"
               >
-                + Expand
-              </button>
-            </div>
-          ))}
+                <div className="space-y-1">
+                  <p className="font-big title18 font-bold text-primary">
+                    {entry.title}
+                  </p>
+                  {entry.project ? (
+                    <p className="text-xs uppercase tracking-[0.18em] text-info-light">
+                      Project: <span className="text-primary">{entry.project}</span>
+                    </p>
+                  ) : null}
+                  <p className="title14 !text-info-light whitespace-pre-line">
+                    {snippet}
+                  </p>
+                </div>
+                <div className="flex justify-between items-center mt-2 text-xs uppercase tracking-[0.14em] text-info-light">
+                  <span>{entry.tag ?? "Log"}</span>
+                  <span>{entry.publishedAt ?? "—"}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
         <div className="space-y-1 border-t border-white/10 pt-6 pb-8">
           <p className="title18">Older Logs:</p>
@@ -195,8 +171,13 @@ export default function LogsContent() {
                 <h1 className="text-[16px] sm:text-lg font-big text-primary font-bold">
                   {entry.title}
                 </h1>
+                {entry.project ? (
+                  <p className="text-xs uppercase tracking-[0.18em] text-primary/90">
+                    Project: {entry.project}
+                  </p>
+                ) : null}
                 <p className="title16 text-primary">
-                  Date: {entry.publishedAt ?? dateLabel}
+                  Date: {entry.publishedAt ?? "—"}
                 </p>
               </div>
             ))}

@@ -207,6 +207,7 @@ export const fallbackLogs: LogRecord[] = [
     location: "Research Facility, Planet X-17",
     status: "In Development",
     published_at: "2007-04-25",
+    project: "Arze Store",
   },
   {
     id: "log-previous-1",
@@ -216,6 +217,7 @@ export const fallbackLogs: LogRecord[] = [
     location: "Remote",
     status: "Initiated",
     published_at: "2007-04-20",
+    project: "Vermillion Fashion",
   },
   {
     id: "log-previous-2",
@@ -225,5 +227,6 @@ export const fallbackLogs: LogRecord[] = [
     location: "Remote",
     status: "In Progress",
     published_at: "2007-04-18",
+    project: "Thunderfoot Studio",
   },
 ];

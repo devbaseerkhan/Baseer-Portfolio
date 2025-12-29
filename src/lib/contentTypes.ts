@@ -26,6 +26,7 @@ export type LogRecord = {
   location?: string | null;
   status?: string | null;
   published_at?: string | null;
+  project?: string | null;
 };
 
 export type AchievementStatus = "achieved" | "in_progress" | "todo";

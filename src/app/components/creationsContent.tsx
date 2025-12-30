@@ -35,32 +35,36 @@ export default function CreationsContent() {
     return url;
   };
 
-  const mapProject = useCallback((record: ProjectRecord): Creation => ({
-    id: record.id,
-    title: record.title,
-    category: record.category ?? "Project",
-    published:
-      record.published ??
-      (record.status === "done"
-        ? "Completed"
-        : record.status === "current"
-        ? "Current project"
-        : "In progress"),
-    description: record.summary ?? record.description ?? "Project update.",
-    image:
-      normalizeDriveUrl(record.image_url) ??
-      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900'><rect width='1600' height='900' fill='%230a0a0f'/><text x='50%' y='50%' fill='%23e84a4a' font-size='48' font-family='Arial' text-anchor='middle'>Project thumbnail</text></svg>",
-    link: record.live_url ?? "#",
-    brief: record.brief ?? undefined,
-    about: record.about ?? undefined,
-    technologies: record.tech_stack ?? undefined,
-    files: record.files
-      ? record.files.map((file) => ({
-          ...file,
-          preview: normalizeDriveUrl(file.preview),
-        }))
-      : undefined,
-  }), []);
+  const mapProject = useCallback(
+    (record: ProjectRecord): Creation => ({
+      id: record.id,
+      title: record.title,
+      category: record.category ?? "Project",
+      published:
+        record.published ??
+        (record.status === "done"
+          ? "Completed"
+          : record.status === "current"
+          ? "Current project"
+          : "In progress"),
+      image:
+        normalizeDriveUrl(record.image_url) ??
+        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900'><rect width='1600' height='900' fill='%230a0a0f'/><text x='50%' y='50%' fill='%23e84a4a' font-size='48' font-family='Arial' text-anchor='middle'>Project thumbnail</text></svg>",
+      link: record.live_url ?? "#",
+      brief: record.brief ?? undefined,
+      about: record.about ?? undefined,
+      result: record.result ?? undefined,
+      whatWeDid: record.what_we_did ?? undefined,
+      technologies: record.tech_stack ?? undefined,
+      files: record.files
+        ? record.files.map((file) => ({
+            ...file,
+            preview: normalizeDriveUrl(file.preview),
+          }))
+        : undefined,
+    }),
+    [],
+  );
 
   const fallbackMapped = useMemo(
     () => fallbackProjects.map(mapProject),

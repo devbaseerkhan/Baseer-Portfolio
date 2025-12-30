@@ -5,8 +5,8 @@ export type ProjectRecord = {
   title: string;
   category: string | null;
   status: ProjectStatus;
-  summary?: string | null;
-  description?: string | null;
+  what_we_did?: string[] | string | null;
+  result?: string[] | string | null;
   brief?: string | null;
   about?: string | null;
   published?: string | null;

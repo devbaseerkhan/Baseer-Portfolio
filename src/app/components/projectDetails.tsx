@@ -80,6 +80,32 @@ export default function ProjectDetails({
   const aboutText =
     project.about ??
     "The team has encountered several challenges during the development process, including unexpected system crashes, hardware malfunctions, and unanticipated compatibility issues.";
+  const normalizeList = (value?: string | string[], fallback?: string) => {
+    const parsed = Array.isArray(value)
+      ? value.map((item) => item?.trim()).filter(Boolean)
+      : typeof value === "string"
+      ? value
+          .split(/\n+/)
+          .map((item) => item.trim())
+          .filter(Boolean)
+      : [];
+    if (parsed.length) return parsed;
+    if (fallback) {
+      return fallback
+        .split(/\n+/)
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+    return [];
+  };
+  const whatWeDidList = normalizeList(
+    project.whatWeDid,
+    "Outlined the delivery approach, built the core experience, and iterated with the client to land the final polish.",
+  );
+  const resultList = normalizeList(
+    project.result,
+    "Delivered measurable improvements to usability, performance, and overall product quality.",
+  );
   const previewImages = useMemo(
     () =>
       files.map((file, index) => ({
@@ -157,12 +183,40 @@ export default function ProjectDetails({
                   ))}
                 </div>
               </div>
-              <div className="w-full px-2.5">
+              <div className="w-full px-2.5 flex flex-col gap-4">
                 <div className="flex flex-col gap-3">
                   <p className="title14">About:</p>
                   <p className="title14 !text-info-light whitespace-pre-line leading-relaxed">
                     {aboutText}
                   </p>
+                  <button
+                    type="button"
+                    className="w-max text-xs uppercase tracking-[0.18em] text-primary underline"
+                  >
+                    + Expand
+                  </button>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <p className="title14">What We Did:</p>
+                  <ul className="title14 !text-info-light leading-relaxed space-y-1 list-disc pl-4">
+                    {whatWeDidList.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                  <button
+                    type="button"
+                    className="w-max text-xs uppercase tracking-[0.18em] text-primary underline"
+                  >
+                    + Expand
+                  </button>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <p className="title14">Result:</p>
+                  <ul className="title14 !text-info-light leading-relaxed space-y-1 list-disc pl-4">
+                    {resultList.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
                   <button
                     type="button"
                     className="w-max text-xs uppercase tracking-[0.18em] text-primary underline"

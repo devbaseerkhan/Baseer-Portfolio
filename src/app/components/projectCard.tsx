@@ -9,9 +9,10 @@ export type Creation = {
   title: string;
   category: string;
   published: string;
-  description: string;
   image: string;
   link: string;
+  result?: string | string[];
+  whatWeDid?: string | string[];
   brief?: string;
   about?: string;
   technologies?: string[];
@@ -35,6 +36,16 @@ export default function ProjectCard({
     } else if (project.link) {
       window.open(project.link, "_blank", "noopener,noreferrer");
     }
+  };
+
+  const previewText = () => {
+    const candidate = project.result ?? project.whatWeDid;
+    if (!candidate) return "Project update.";
+    const list = Array.isArray(candidate)
+      ? candidate
+      : candidate.split(/\n+/);
+    const first = list.map((item) => item.trim()).find(Boolean);
+    return first ?? "Project update.";
   };
 
   return (
@@ -78,7 +89,7 @@ export default function ProjectCard({
           </h2>
           <p className="title14">{project.category}</p>
         </div>
-        <p className="title14 !text-info-light">{project.description}</p>
+        <p className="title14 !text-info-light">{previewText()}</p>
         <div className="w-full">
           <svg
             width="100%"

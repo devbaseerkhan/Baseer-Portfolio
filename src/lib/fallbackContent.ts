@@ -10,10 +10,14 @@ export const fallbackProjects: ProjectRecord[] = [
     title: "Arze Store",
     category: "React Website",
     status: "done",
-    summary:
+    result: [
       "Bold typography, smooth animations, and fast transitions across the product story.",
-    description:
-      "Boosted the product story with bold typography, delightful animations, and ultra-fast page transitions.",
+      "Kept the shopping flow responsive under heavy media.",
+    ],
+    what_we_did: [
+      "Boosted the product story with bold typography and delightful animations.",
+      "Optimized transitions to keep browsing feeling instant.",
+    ],
     published: "Published 3 months ago",
     tech_stack: ["Next.js", "React", "TypeScript", "JS", "Git"],
     image_url:
@@ -35,9 +39,14 @@ export const fallbackProjects: ProjectRecord[] = [
     title: "Vermillion Fashion",
     category: "React Website",
     status: "in_progress",
-    summary: "Editorial layout with immersive color theming.",
-    description:
-      "Editorial-inspired layout with layered imagery, silky scrolling, and immersive color theming.",
+    result: [
+      "Editorial layout with immersive color theming.",
+      "Layered imagery that keeps brand storytelling front-and-center.",
+    ],
+    what_we_did: [
+      "Built an editorial-inspired layout with layered imagery.",
+      "Dialed in silky scrolling and immersive color theming.",
+    ],
     published: "Published 3 months ago",
     tech_stack: ["Next.js", "React", "TypeScript", "CSS", "Git"],
     image_url:
@@ -58,9 +67,14 @@ export const fallbackProjects: ProjectRecord[] = [
     title: "Thunderfoot Studio",
     category: "React Website",
     status: "done",
-    summary: "Modular studio site with CMS-driven sections and glassy device mocks.",
-    description:
-      "Crafted a modular portfolio with CMS-driven sections, device mocks, and crisp glassmorphism.",
+    result: [
+      "Modular studio site with CMS-driven sections and glassy device mocks.",
+      "Case studies ship faster with the new content model.",
+    ],
+    what_we_did: [
+      "Crafted a modular portfolio with CMS-driven sections.",
+      "Layered device mocks with crisp glassmorphism polish.",
+    ],
     published: "Published 3 months ago",
     tech_stack: ["Next.js", "React", "TypeScript", "GSAP", "Git"],
     image_url:
@@ -81,9 +95,14 @@ export const fallbackProjects: ProjectRecord[] = [
     title: "Spectra Dashboard",
     category: "React Website",
     status: "current",
-    summary: "Data-dense dashboard with micro-interactions and live theming.",
-    description:
-      "Data-dense control panel with micro-interactions, real-time theming, and resilient responsive grids.",
+    result: [
+      "Data-dense dashboard with micro-interactions and live theming.",
+      "Responsive grids hold up under real-time data streams.",
+    ],
+    what_we_did: [
+      "Designed a data-dense control panel with micro-interactions.",
+      "Added real-time theming and resilient responsive grids.",
+    ],
     published: "Published 1 month ago",
     tech_stack: ["Next.js", "React", "TypeScript", "Tailwind", "Git"],
     image_url:

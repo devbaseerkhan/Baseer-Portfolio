@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { HiOutlineFolder } from "react-icons/hi";
 import { LuImage } from "react-icons/lu";
@@ -67,7 +67,13 @@ export default function ProjectDetails({
   project,
   onBack,
 }: ProjectDetailsProps) {
+  const detailsRef = useRef<HTMLDivElement | null>(null);
+  const [aboutExpanded, setAboutExpanded] = useState(false);
+  const [whatExpanded, setWhatExpanded] = useState(false);
+  const [resultExpanded, setResultExpanded] = useState(false);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+  const collapsedTextHeight = "7.5em"; // ~5 lines
+  const collapsedListHeight = "6.5em"; // roughly 3 bullets
   const techList: TechListItem[] = project.technologies?.length
     ? project.technologies.map((name) => ({
         name,
@@ -106,6 +112,27 @@ export default function ProjectDetails({
     project.result,
     "Delivered measurable improvements to usability, performance, and overall product quality.",
   );
+  const visibleWhatList = whatExpanded
+    ? whatWeDidList
+    : whatWeDidList.slice(0, 3);
+  const visibleResultList = resultExpanded
+    ? resultList
+    : resultList.slice(0, 3);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        detailsRef.current &&
+        !detailsRef.current.contains(event.target as Node)
+      ) {
+        setAboutExpanded(false);
+        setWhatExpanded(false);
+        setResultExpanded(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   const previewImages = useMemo(
     () =>
       files.map((file, index) => ({
@@ -125,7 +152,10 @@ export default function ProjectDetails({
 
   return (
     <>
-      <div className="w-full px-4 sm:px-6 xl:px-10 2xl:px-[6%]">
+      <div
+        ref={detailsRef}
+        className="w-full px-4 sm:px-6 xl:px-10 2xl:px-[6%]"
+      >
         <div className="flex flex-col gap-6">
           <h1 className="title18 text-center">Creations</h1>
           <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-[360px_minmax(0,1fr)] lg:grid-cols-[360px_minmax(0,1fr)]">
@@ -186,43 +216,83 @@ export default function ProjectDetails({
               <div className="w-full px-2.5 flex flex-col gap-4">
                 <div className="flex flex-col gap-3">
                   <p className="title14">About:</p>
-                  <p className="title14 !text-info-light whitespace-pre-line leading-relaxed">
-                    {aboutText}
-                  </p>
+                  <div className="relative">
+                    <p
+                      className="title14 !text-info-light whitespace-pre-line leading-relaxed transition-[max-height] duration-300 ease-out overflow-hidden"
+                      style={{
+                        maxHeight: aboutExpanded ? "999px" : collapsedTextHeight,
+                      }}
+                    >
+                      {aboutText}
+                    </p>
+                    {!aboutExpanded ? (
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-dark to-transparent" />
+                    ) : null}
+                  </div>
                   <button
                     type="button"
-                    className="w-max text-xs uppercase tracking-[0.18em] text-primary underline"
+                    className="w-max text-sm uppercase tracking-[0.18em] text-primary underline cursor-pointer"
+                    onClick={() => setAboutExpanded((prev) => !prev)}
+                    aria-expanded={aboutExpanded}
                   >
-                    + Expand
+                    {aboutExpanded ? "- Collapse" : "+ Expand"}
                   </button>
                 </div>
                 <div className="flex flex-col gap-3">
                   <p className="title14">What We Did:</p>
-                  <ul className="title14 !text-info-light leading-relaxed space-y-1 list-disc pl-4">
-                    {whatWeDidList.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                  <button
-                    type="button"
-                    className="w-max text-xs uppercase tracking-[0.18em] text-primary underline"
-                  >
-                    + Expand
-                  </button>
+                  <div className="relative">
+                    <ul
+                      className="title14 !text-info-light leading-relaxed space-y-1 list-disc pl-4 transition-[max-height] duration-300 ease-out overflow-hidden"
+                      style={{
+                        maxHeight: whatExpanded ? "999px" : collapsedListHeight,
+                      }}
+                    >
+                      {visibleWhatList.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                    {!whatExpanded && whatWeDidList.length > 3 ? (
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-dark to-transparent" />
+                    ) : null}
+                  </div>
+                  {whatWeDidList.length > 3 ? (
+                    <button
+                      type="button"
+                      className="w-max text-sm uppercase tracking-[0.18em] text-primary underline cursor-pointer"
+                      onClick={() => setWhatExpanded((prev) => !prev)}
+                      aria-expanded={whatExpanded}
+                    >
+                      {whatExpanded ? "- Collapse" : "+ Expand"}
+                    </button>
+                  ) : null}
                 </div>
                 <div className="flex flex-col gap-3">
                   <p className="title14">Result:</p>
-                  <ul className="title14 !text-info-light leading-relaxed space-y-1 list-disc pl-4">
-                    {resultList.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                  <button
-                    type="button"
-                    className="w-max text-xs uppercase tracking-[0.18em] text-primary underline"
-                  >
-                    + Expand
-                  </button>
+                  <div className="relative">
+                    <ul
+                      className="title14 !text-info-light leading-relaxed space-y-1 list-disc pl-4 transition-[max-height] duration-300 ease-out overflow-hidden"
+                      style={{
+                        maxHeight: resultExpanded ? "999px" : collapsedListHeight,
+                      }}
+                    >
+                      {visibleResultList.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                    {!resultExpanded && resultList.length > 3 ? (
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-dark to-transparent" />
+                    ) : null}
+                  </div>
+                  {resultList.length > 3 ? (
+                    <button
+                      type="button"
+                      className="w-max text-sm uppercase tracking-[0.18em] text-primary underline cursor-pointer"
+                      onClick={() => setResultExpanded((prev) => !prev)}
+                      aria-expanded={resultExpanded}
+                    >
+                      {resultExpanded ? "- Collapse" : "+ Expand"}
+                    </button>
+                  ) : null}
                 </div>
               </div>
             </div>

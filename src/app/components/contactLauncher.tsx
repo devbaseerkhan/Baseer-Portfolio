@@ -1,12 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoBluetooth } from "react-icons/io5";
 import Button from "./Button";
 import ContactMe from "./contactMe";
 
+const VIDEO_CHANGE_EVENT = "connection-video-change";
+const DEFAULT_VIDEO = "/videos/video1.mp4";
+const CONNECTION_VIDEO = "/videos/video2.mp4";
+const MODAL_DELAY_MS = 1500;
+
 export default function ContactLauncher() {
   const [isOpen, setIsOpen] = useState(false);
+  const openTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (openTimerRef.current) clearTimeout(openTimerRef.current);
+    };
+  }, []);
+
+  const handleOpenWithDelay = () => {
+    window.dispatchEvent(
+      new CustomEvent(VIDEO_CHANGE_EVENT, { detail: CONNECTION_VIDEO })
+    );
+
+    if (openTimerRef.current) clearTimeout(openTimerRef.current);
+    openTimerRef.current = setTimeout(() => setIsOpen(true), MODAL_DELAY_MS);
+  };
+
+  const handleClose = () => {
+    if (openTimerRef.current) clearTimeout(openTimerRef.current);
+    setIsOpen(false);
+    window.dispatchEvent(
+      new CustomEvent(VIDEO_CHANGE_EVENT, { detail: DEFAULT_VIDEO })
+    );
+  };
 
   return (
     <>
@@ -16,11 +45,11 @@ export default function ContactLauncher() {
           label="Open Connection"
           icon={<IoBluetooth />}
           variant="outlined"
-          onClick={() => setIsOpen(true)}
+          onClick={handleOpenWithDelay}
           className="text-[16px] lg:text-lg h-7.5 lg:h-auto"
         />
       </div>
-      <ContactMe open={isOpen} onClose={() => setIsOpen(false)} />
+      <ContactMe open={isOpen} onClose={handleClose} />
     </>
   );
 }

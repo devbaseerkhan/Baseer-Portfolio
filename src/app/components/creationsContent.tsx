@@ -7,9 +7,9 @@ import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import { fetchProjects } from "@/lib/contentApi";
 import type { ProjectRecord } from "@/lib/contentTypes";
 import { fallbackProjects } from "@/lib/fallbackContent";
+import Filtration, { type FilterOption } from "./filtration";
 
 type SliderVariant = "classic" | "cinematic";
-
 
 export default function CreationsContent() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -20,10 +20,13 @@ export default function CreationsContent() {
     typeof window !== "undefined" ? window.innerWidth : 0
   );
   const [projects, setProjects] = useState<Creation[]>([]);
+  const [activeCategories, setActiveCategories] = useState<Set<string>>(
+    new Set()
+  );
   const [loading, setLoading] = useState(true);
   const [hasFetched, setHasFetched] = useState(false);
 
-  const normalizeDriveUrl = (url?: string | null) => {
+  const normalizeDriveUrl = useCallback((url?: string | null) => {
     if (!url) return url ?? undefined;
     if (url.includes("drive.google.com/file/d/")) {
       const parts = url.split("/d/")[1]?.split("/");
@@ -33,7 +36,7 @@ export default function CreationsContent() {
       }
     }
     return url;
-  };
+  }, []);
 
   const mapProject = useCallback(
     (record: ProjectRecord): Creation => ({
@@ -63,20 +66,61 @@ export default function CreationsContent() {
           }))
         : undefined,
     }),
-    [],
+    [normalizeDriveUrl]
   );
 
   const fallbackMapped = useMemo(
     () => fallbackProjects.map(mapProject),
-    [mapProject],
+    [mapProject]
   );
 
-  const displayProjects =
-    projects.length > 0
-      ? projects
-      : hasFetched
-      ? fallbackMapped
-      : [];
+  const displayProjects = useMemo(
+    () => (projects.length > 0 ? projects : hasFetched ? fallbackMapped : []),
+    [fallbackMapped, hasFetched, projects]
+  );
+
+  const normalizeCategory = useCallback((category?: string | null) => {
+    const base = category?.trim() || "Uncategorized";
+    return (
+      base
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "uncategorized"
+    );
+  }, []);
+
+  const categoryOptions = useMemo<FilterOption[]>(() => {
+    const map = new Map<string, string>();
+    displayProjects.forEach((project) => {
+      const id = normalizeCategory(project.category);
+      if (!map.has(id)) {
+        map.set(id, project.category ?? "Uncategorized");
+      }
+    });
+    return Array.from(map.entries()).map(([id, label]) => ({ id, label }));
+  }, [displayProjects, normalizeCategory]);
+
+  const defaultCategorySet = useMemo(
+    () => new Set(categoryOptions.map((option) => option.id)),
+    [categoryOptions]
+  );
+
+  const resolvedActiveCategories = useMemo(() => {
+    if (defaultCategorySet.size === 0) return new Set<string>();
+    if (activeCategories.size === 0) return defaultCategorySet;
+    const next = new Set(
+      Array.from(activeCategories).filter((id) => defaultCategorySet.has(id))
+    );
+    return next.size === 0 ? defaultCategorySet : next;
+  }, [activeCategories, defaultCategorySet]);
+
+  const filteredProjects = useMemo(
+    () =>
+      displayProjects.filter((project) =>
+        resolvedActiveCategories.has(normalizeCategory(project.category))
+      ),
+    [displayProjects, normalizeCategory, resolvedActiveCategories]
+  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -129,24 +173,24 @@ export default function CreationsContent() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [mapProject]);
 
   const maxIndex =
     variant === "classic"
-      ? Math.max(0, displayProjects.length - itemsPerView)
-      : Math.max(displayProjects.length - 1, 0);
+      ? Math.max(0, filteredProjects.length - itemsPerView)
+      : Math.max(filteredProjects.length - 1, 0);
   const currentIndex = Math.min(activeIndex, maxIndex);
-  const slideWidthPercent = displayProjects.length
-    ? 100 / displayProjects.length
+  const slideWidthPercent = filteredProjects.length
+    ? 100 / filteredProjects.length
     : 100;
 
   const trackStyle = useMemo(() => {
     const translate = -(currentIndex * slideWidthPercent);
     return {
-      width: `${(displayProjects.length / itemsPerView) * 100}%`,
+      width: `${(filteredProjects.length / itemsPerView) * 100}%`,
       transform: `translateX(${translate}%)`,
     };
-  }, [currentIndex, displayProjects.length, itemsPerView, slideWidthPercent]);
+  }, [currentIndex, filteredProjects.length, itemsPerView, slideWidthPercent]);
 
   const next = () => {
     setActiveIndex((prev) => {
@@ -164,15 +208,30 @@ export default function CreationsContent() {
 
   const cinematicDelta = (index: number) => {
     const raw = index - activeIndex;
-    if (displayProjects.length === 0) return 0;
+    if (filteredProjects.length === 0) return 0;
     const wrap =
-      Math.abs(raw) <= displayProjects.length / 2
+      Math.abs(raw) <= filteredProjects.length / 2
         ? raw
         : raw > 0
-        ? raw - displayProjects.length
-        : raw + displayProjects.length;
+        ? raw - filteredProjects.length
+        : raw + filteredProjects.length;
     return wrap;
   };
+
+  const toggleCategory = (id: string) => {
+    setActiveCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const resetCategories = () =>
+    setActiveCategories(new Set(defaultCategorySet));
 
   return (
     <div className="h-full w-full max-h-[calc(100vh-74px)] md:max-h-[calc(100vh-176px)] overflow-y-auto overflow-x-hidden py-6 lg:py-10 2xl:py-12">
@@ -182,36 +241,39 @@ export default function CreationsContent() {
           onBack={() => setDetailsProject(null)}
         />
       ) : (
-        <div className="w-full flex flex-col gap-6 2xl:gap-8">
-          <div className="flex flex-col gap-6 px-4 sm:px-6 lg:px-10">
-            <h1 className="title18 text-center">Creations</h1>
-            <p className="text-center text-sm uppercase tracking-[0.14em] text-info-light">
-              {loading ? "Syncing projects from Supabase..." : "CMS powered projects"}
-            </p>
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <div className="flex flex-col gap-1">
-                <span className="title12 !text-info-light">Slider style:</span>
-                <div className="flex rounded border border-primary">
-                  {(
-                    [
-                      { key: "classic", label: "Classic Rail" },
-                      { key: "cinematic", label: "Cinematic Focus" },
-                    ] satisfies { key: SliderVariant; label: string }[]
-                  ).map((option) => (
-                    <button
-                      key={option.key}
-                      type="button"
-                      onClick={() => setVariant(option.key)}
-                      className={`px-3 py-1 text-sm uppercase tracking-[0.14em] font-big font-bold transition ${
-                        variant === option.key
-                          ? "bg-primary text-dark"
-                          : "text-primary hover:bg-primary-20"
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
+        <div className="w-full flex flex-col gap-6 2xl:gap-8 relative">
+          <div className="w-full flex flex-col gap-3 px-0 sm:px-6 lg:px-10">
+            <div className="w-full flex flex-col gap-6 ">
+              <h1 className="title18 text-center">Creations</h1>
+              <Filtration
+                label="Filter:"
+                options={categoryOptions}
+                active={resolvedActiveCategories}
+                onToggle={toggleCategory}
+                onReset={resetCategories}
+              />
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-0">
+              <div className="flex rounded border border-primary">
+                {(
+                  [
+                    { key: "classic", label: "Classic Rail" },
+                    { key: "cinematic", label: "Cinematic Focus" },
+                  ] satisfies { key: SliderVariant; label: string }[]
+                ).map((option) => (
+                  <button
+                    key={option.key}
+                    type="button"
+                    onClick={() => setVariant(option.key)}
+                    className={`px-1 lg:px-3 py-1 text-sm uppercase tracking-[0.14em] font-big font-bold transition ${
+                      variant === option.key
+                        ? "bg-primary text-dark"
+                        : "text-primary hover:bg-primary-20"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
               </div>
               <div className="flex gap-2">
                 <button
@@ -233,11 +295,11 @@ export default function CreationsContent() {
               </div>
             </div>
           </div>
-          {!displayProjects.length ? (
+          {!filteredProjects.length ? (
             <div className="flex items-center justify-center py-10 text-sm uppercase tracking-[0.14em] text-info-light">
-              {loading && !hasFetched
+              {displayProjects.length === 0 && loading && !hasFetched
                 ? "Syncing projects from Supabase..."
-                : "No projects yet"}
+                : "No projects match these filters"}
             </div>
           ) : variant === "classic" ? (
             <div className="h-full w-full overflow-hidden px-2 lg:px-6">
@@ -245,14 +307,12 @@ export default function CreationsContent() {
                 className="flex transition-transform duration-500 ease-out"
                 style={trackStyle}
               >
-                {displayProjects.map((project) => (
+                {filteredProjects.map((project) => (
                   <article
                     key={project.id}
                     className="creation-card shrink-0"
                     style={{
-                      width: `${
-                        100 / displayProjects.length
-                      }%`,
+                      width: `${100 / filteredProjects.length}%`,
                     }}
                   >
                     <ProjectCard
@@ -268,7 +328,7 @@ export default function CreationsContent() {
               className="relative min-h-180 w-full flex items-center justify-center"
               style={{ perspective: "1800px" }}
             >
-              {displayProjects.map((project, index) => {
+              {filteredProjects.map((project, index) => {
                 const delta = cinematicDelta(index);
                 const isHidden = Math.abs(delta) > 1;
                 const translateX = delta * (viewportWidth < 640 ? 280 : 380);

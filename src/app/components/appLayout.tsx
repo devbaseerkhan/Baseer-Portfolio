@@ -33,7 +33,7 @@ export default function AppLayout({ tabs, mobileIntro }: AppLayoutProps) {
   );
 
   return (
-    <div className="h-screen pb-6 pt-0 lg:pb-20 lg:px-6 xl:px-10 2xl:px-20">
+    <div className="h-screen pb-6 pt-0 lg:pb-20 lg:px-6 xl:px-10 2xl:px-20 overflow-x-hidden">
       <div className="w-full hidden md:block sticky top-0 z-40 border-b border-white/10 px-4 lg:px-0">
         <Header />
       </div>

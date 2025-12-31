@@ -82,7 +82,7 @@ export default function ProjectCard({
           </div>
         </div>
       </BoxStack>
-      <div className="space-y-4 p-3 xl:p-4">
+      <div className="space-y-4 py-3 px-0 sm:p-3 xl:p-4">
         <div className="flex flex-col">
           <h2 className="title18 font-big font-bold text-primary">
             {project.title}

@@ -21,40 +21,10 @@ const SFX_ENABLED_KEY = "controls-sfx-enabled";
 
 const tracks: Track[] = [
   {
-    id: "retro-chase",
-    name: "Retro Chase",
-    src: "/mp3/retro-gaming.mp3",
-    volume: 0.5,
-  },
-  {
-    id: "epic-cinematic",
-    name: "Epic Cinematic",
-    src: "/mp3/epic-cinematic.mp3",
-    volume: 0.5,
-  },
-  {
-    id: "edm-gaming",
-    name: "Edm Gaming",
-    src: "/mp3/edm-gaming.mp3",
-    volume: 0.5,
-  },
-  {
-    id: "cybernetic-overload",
-    name: "Cybernetic",
-    src: "/mp3/cybernetic-overload.mp3",
-    volume: 0.5,
-  },
-  {
-    id: "echoes-of-a-lost-kingdom",
-    name: "Lost Kingdom",
-    src: "/mp3/echoes-of-a-lost-kingdom.mp3",
-    volume: 0.5,
-  },
-  {
-    id: "whispering-bamboo",
-    name: "Whispering",
-    src: "/mp3/whispering-bamboo.mp3",
-    volume: 0.5,
+    id: "lake-at-night",
+    name: "Lake at Night",
+    src: "/mp3/lake-at-night.mp3",
+    volume: 0.9,
   },
 ];
 
@@ -154,8 +124,11 @@ export default function ControlsButtons({
     if (typeof window === "undefined") return;
     const storedMusic = window.localStorage.getItem(MUSIC_ENABLED_KEY);
     const storedSfx = window.localStorage.getItem(SFX_ENABLED_KEY);
-    if (storedMusic !== null) {
-      setIsMusicOn(storedMusic === "true");
+    // Respect stored music preference; default to on if nothing stored.
+    const musicEnabled = storedMusic === null ? true : storedMusic === "true";
+    setIsMusicOn(musicEnabled);
+    if (storedMusic === null) {
+      window.localStorage.setItem(MUSIC_ENABLED_KEY, "true");
     }
     if (storedSfx !== null) {
       setSfxOn(storedSfx === "true");
@@ -214,7 +187,7 @@ export default function ControlsButtons({
       }
     }, 250);
     return () => window.clearTimeout(timer);
-  }, [getTrack, isMusicOn, playTrack, selectedTrackId]);
+  }, [getTrack, isMusicOn, playTrack, selectedTrackId, settingsReady]);
 
   // Initialize audio on mount so default-on can start as soon as allowed.
   useEffect(() => {
@@ -241,7 +214,7 @@ export default function ControlsButtons({
     window.addEventListener("pointerdown", onFirstInteraction, { once: true });
     return () =>
       window.removeEventListener("pointerdown", onFirstInteraction);
-  }, [getTrack, isMusicOn, playTrack, selectedTrackId]);
+  }, [getTrack, isMusicOn, playTrack, selectedTrackId, settingsReady]);
 
   useEffect(
     () => () => {

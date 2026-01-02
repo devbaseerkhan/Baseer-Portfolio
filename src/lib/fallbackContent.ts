@@ -1,6 +1,7 @@
 import type {
   AchievementRecord,
   LogRecord,
+  ProfileRecord,
   ProjectRecord,
 } from "./contentTypes";
 
@@ -249,3 +250,22 @@ export const fallbackLogs: LogRecord[] = [
     project: "Thunderfoot Studio",
   },
 ];
+
+export const fallbackProfile: ProfileRecord = {
+  id: "baseer",
+  name: "Baseer Ahmed Khan",
+  occupation: "Frontend Engineer",
+  corporation: "Independent",
+  availability: "Available for new projects",
+  motto: "Shipping expressive, resilient web experiences.",
+  who_is: "Baseer Ahmed Khan",
+  career_and_development:
+    "I have always been fascinated by how digital experiences can make life easier and more delightful. From frontend frameworks like React and Next.js to backend services and automation, I build resilient web products that are quick, expressive, and accessible. I stay sharp by exploring new tools, refining craft, and shipping often.",
+  problem_solving:
+    "My priority is reliability and clarity. I love collaborating with cross-functional teams, understanding the constraints, and delivering solutions that balance technical rigor with a bold aesthetic. Strong attention to detail, thoughtful interactions, and pragmatic decisions are my hallmarks.",
+  toolset:
+    "Comfortable across TypeScript, React, Next.js, Tailwind, animations, and modern tooling. I enjoy shaping design systems, building immersive UI states, and keeping performance budgets in check.",
+  level: 25,
+  base_coins: 500,
+  coin_reward_per_click: 1,
+};

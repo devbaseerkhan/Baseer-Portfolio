@@ -4,6 +4,7 @@ import { getSupabaseClient } from "./supabaseClient";
 import type {
   AchievementRecord,
   LogRecord,
+  ProfileRecord,
   ProjectRecord,
   ProjectStatus,
 } from "./contentTypes";
@@ -62,6 +63,23 @@ export async function fetchAchievements(): Promise<ListResult<AchievementRecord>
 
   if (error) {
     console.error("[supabase] fetchAchievements", error);
+    return { data: [], error: error.message };
+  }
+  return { data: data ?? [], error: null };
+}
+
+export async function fetchProfile(): Promise<ListResult<ProfileRecord>> {
+  const client = getSupabaseClient();
+  if (!client) return { data: [], error: "Supabase not configured" };
+
+  const { data, error } = await client
+    .from("profile")
+    .select("*")
+    .order("id", { ascending: true })
+    .limit(1);
+
+  if (error) {
+    console.error("[supabase] fetchProfile", error);
     return { data: [], error: error.message };
   }
   return { data: data ?? [], error: null };

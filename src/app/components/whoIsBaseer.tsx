@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import BoxStack from "./boxStack";
 import UserSvg from "./userSvg";
+import { fetchProfile } from "@/lib/contentApi";
+import { fallbackProfile } from "@/lib/fallbackContent";
+import type { ProfileRecord } from "@/lib/contentTypes";
 
 type WhoIsBaseerProps = {
   open: boolean;
@@ -11,6 +14,8 @@ type WhoIsBaseerProps = {
 };
 
 export default function WhoIsBaseer({ open, onClose }: WhoIsBaseerProps) {
+  const [profile, setProfile] = useState<ProfileRecord>(fallbackProfile);
+
   useEffect(() => {
     if (!open) return undefined;
     const handleKey = (event: KeyboardEvent) => {
@@ -19,6 +24,28 @@ export default function WhoIsBaseer({ open, onClose }: WhoIsBaseerProps) {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [open, onClose]);
+
+  useEffect(() => {
+    let mounted = true;
+    fetchProfile()
+      .then((result) => {
+        if (!mounted) return;
+        if (result.data[0]) {
+          setProfile({
+            ...fallbackProfile,
+            ...result.data[0],
+          });
+        } else {
+          setProfile(fallbackProfile);
+        }
+      })
+      .catch(() => {
+        setProfile(fallbackProfile);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   if (!open) return null;
 
@@ -30,7 +57,7 @@ export default function WhoIsBaseer({ open, onClose }: WhoIsBaseerProps) {
             <div className="space-y-1 text-center">
               <p className="title16">The short introduction of my life</p>
               <h2 className="text-xl sm:text-2xl lg:text-4xl font-big font-bold uppercase tracking-[0.2em] text-primary">
-                Who is Baseer Ahmed Khan
+                {profile.who_is ?? "Who is Baseer Ahmed Khan"}
               </h2>
             </div>
             <button
@@ -50,39 +77,21 @@ export default function WhoIsBaseer({ open, onClose }: WhoIsBaseerProps) {
                 <h3 className="title16 !text-info-light xl:text-right">
                   Career and development
                 </h3>
-                <p className="title18">
-                  I have always been fascinated by how digital experiences can
-                  make life easier and more delightful. From frontend frameworks
-                  like React and Next.js to backend services and automation, I
-                  build resilient web products that are quick, expressive, and
-                  accessible. I stay sharp by exploring new tools, refining
-                  craft, and shipping often.
-                </p>
+                <p className="title18">{profile.career_and_development}</p>
               </section>
 
               <section className="grid grid-cols-1 xl:grid-cols-[180px_1fr] gap-4 xl:gap-7">
                 <h3 className="title16 !text-info-light xl:text-right">
                   Problem solving
                 </h3>
-                <p className="title18">
-                  My priority is reliability and clarity. I love collaborating
-                  with cross-functional teams, understanding the constraints,
-                  and delivering solutions that balance technical rigor with a
-                  bold aesthetic. Strong attention to detail, thoughtful
-                  interactions, and pragmatic decisions are my hallmarks.
-                </p>
+                <p className="title18">{profile.problem_solving}</p>
               </section>
 
               <section className="grid grid-cols-1 xl:grid-cols-[180px_1fr] gap-4 xl:gap-7">
                 <h3 className="title16 !text-info-light xl:text-right">
                   Toolset
                 </h3>
-                <p className="title18">
-                  Comfortable across TypeScript, React, Next.js, Tailwind,
-                  animations, and modern tooling. I enjoy shaping design
-                  systems, building immersive UI states, and keeping performance
-                  budgets in check.
-                </p>
+                <p className="title18">{profile.toolset}</p>
               </section>
             </div>
             <BoxStack className="h-full max-h-110 2xl:max-h-173.5 w-full flex justify-center items-center !bg-black backdrop-blur-2xl">

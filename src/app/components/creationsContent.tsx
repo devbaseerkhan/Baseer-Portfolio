@@ -4,8 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import ProjectCard, { type Creation } from "./projectCard";
 import ProjectDetails from "./projectDetails";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
-import { fetchProjects } from "@/lib/contentApi";
-import type { ProjectRecord } from "@/lib/contentTypes";
+import { fetchProfile, fetchProjects } from "@/lib/contentApi";
+import type { ProfileRecord, ProjectRecord } from "@/lib/contentTypes";
 import { fallbackProjects } from "@/lib/fallbackContent";
 import Filtration, { type FilterOption } from "./filtration";
 
@@ -25,6 +25,7 @@ export default function CreationsContent() {
   );
   const [loading, setLoading] = useState(true);
   const [hasFetched, setHasFetched] = useState(false);
+  const [profile, setProfile] = useState<ProfileRecord | null>(null);
 
   const normalizeDriveUrl = useCallback((url?: string | null) => {
     if (!url) return url ?? undefined;
@@ -174,6 +175,23 @@ export default function CreationsContent() {
       mounted = false;
     };
   }, [mapProject]);
+
+  useEffect(() => {
+    let mounted = true;
+    fetchProfile()
+      .then((result) => {
+        if (!mounted) return;
+        if (result.data[0]) {
+          setProfile(result.data[0]);
+        }
+      })
+      .catch(() => {
+        /* silent: fallback profile used elsewhere */
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const maxIndex =
     variant === "classic"

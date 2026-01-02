@@ -3,6 +3,9 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 
 import { useEffect, useMemo, useState } from "react";
+import { fetchProfile } from "@/lib/contentApi";
+import { fallbackProfile } from "@/lib/fallbackContent";
+import type { ProfileRecord } from "@/lib/contentTypes";
 
 type HeaderProps = React.HTMLAttributes<HTMLElement> & {
   className?: string;
@@ -10,8 +13,8 @@ type HeaderProps = React.HTMLAttributes<HTMLElement> & {
 };
 
 const DEFAULT_LEVEL = 25; // developer-defined level
-const BASE_COINS = 500; // starting coins set by developer
-const COIN_REWARD = 1; // reward per click
+const DEFAULT_BASE_COINS = 500; // starting coins set by developer
+const DEFAULT_REWARD = 1; // reward per click
 const STORAGE_KEY = "portfolio-coin-balance-v1";
 const VISITED_KEY = "portfolio-coin-visited-v1";
 
@@ -20,7 +23,19 @@ export default function Header({
   credits = true,
   ...rest
 }: HeaderProps) {
-  const [coins, setCoins] = useState(BASE_COINS);
+  const [profile, setProfile] = useState<ProfileRecord | null>(null);
+  const resolvedLevel = profile?.level ?? fallbackProfile.level ?? DEFAULT_LEVEL;
+  const baseCoins =
+    profile?.base_coins ?? fallbackProfile.base_coins ?? DEFAULT_BASE_COINS;
+  const coinReward =
+    profile?.coin_reward_per_click ??
+    fallbackProfile.coin_reward_per_click ??
+    DEFAULT_REWARD;
+
+  const storageKey = `${STORAGE_KEY}-${profile?.id ?? "default"}`;
+  const visitedKey = `${VISITED_KEY}-${profile?.id ?? "default"}`;
+
+  const [coins, setCoins] = useState(baseCoins);
   const [visited, setVisited] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -28,17 +43,49 @@ export default function Header({
   useEffect(() => {
     if (typeof window === "undefined") return;
     const storedCoins = Number.parseInt(
-      window.localStorage.getItem(STORAGE_KEY) ?? "",
+      window.localStorage.getItem(storageKey) ?? "",
       10,
     );
-    const storedVisited = window.localStorage.getItem(VISITED_KEY) === "1";
-    const nextCoins = Number.isFinite(storedCoins) ? storedCoins : BASE_COINS;
+    const storedVisited = window.localStorage.getItem(visitedKey) === "1";
+    const nextCoins = Number.isFinite(storedCoins) ? storedCoins : baseCoins;
     setCoins(nextCoins);
     setVisited(storedVisited);
-    window.localStorage.setItem(STORAGE_KEY, String(nextCoins));
-    window.localStorage.setItem(VISITED_KEY, storedVisited ? "1" : "0");
+    window.localStorage.setItem(storageKey, String(nextCoins));
+    window.localStorage.setItem(visitedKey, storedVisited ? "1" : "0");
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storageKey, visitedKey, baseCoins]);
+
+  useEffect(() => {
+    let mounted = true;
+    fetchProfile()
+      .then((result) => {
+        if (!mounted) return;
+        if (result.data[0]) {
+          setProfile(result.data[0]);
+        } else {
+          setProfile(fallbackProfile);
+        }
+      })
+      .catch(() => {
+        setProfile(fallbackProfile);
+      });
+    return () => {
+      mounted = false;
+    };
   }, []);
+
+  useEffect(() => {
+    if (!profile) return;
+    if (typeof window === "undefined") return;
+    const storedCoins = Number.parseInt(
+      window.localStorage.getItem(storageKey) ?? "",
+      10,
+    );
+    const nextCoins = Number.isFinite(storedCoins) ? storedCoins : baseCoins;
+    setCoins(nextCoins);
+    window.localStorage.setItem(storageKey, String(nextCoins));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile?.id, storageKey, baseCoins]);
 
   const showToast = (message: string) => {
     setToast(message);
@@ -51,13 +98,13 @@ export default function Header({
       return;
     }
     setCoins((prev) => {
-      const next = prev + COIN_REWARD;
-      window.localStorage.setItem(STORAGE_KEY, String(next));
-      window.localStorage.setItem(VISITED_KEY, "1");
+      const next = prev + coinReward;
+      window.localStorage.setItem(storageKey, String(next));
+      window.localStorage.setItem(visitedKey, "1");
       return next;
     });
     setVisited(true);
-    showToast(`+${COIN_REWARD} coin added`);
+    showToast(`+${coinReward} coin added`);
   };
 
   const formattedCoins = useMemo(
@@ -73,7 +120,7 @@ export default function Header({
       <div className="flex items-center gap-3 md:gap-5 lg:gap-11">
         <div className="flex items-baseline gap-1 md:gap-2">
           <span className="text-2xl md:text-[26px] font-big font-bold text-primary ">
-            {DEFAULT_LEVEL}
+            {resolvedLevel}
           </span>
           <span className="text-sm md:text-[16px] font-big !text-white/60">Level</span>
         </div>
@@ -82,8 +129,8 @@ export default function Header({
             type="button"
             onClick={addCoins}
             className="flex h-8 w-8 items-center justify-center border border-primary bg-white/5 font-big text-xl font-semibold text-primary hover:bg-white/10 transition cursor-pointer"
-            aria-label={`Add ${COIN_REWARD} coins`}
-            title={`Add ${COIN_REWARD} coins`}
+            aria-label={`Add ${coinReward} coins`}
+            title={`Add ${coinReward} coins`}
           >
             +
           </button>

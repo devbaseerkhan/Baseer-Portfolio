@@ -28,6 +28,7 @@ export default function ContactMe({ open, onClose }: ContactMeProps) {
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -44,6 +45,7 @@ export default function ContactMe({ open, onClose }: ContactMeProps) {
     event.preventDefault();
     setSubmitting(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const payload = {
@@ -73,7 +75,11 @@ export default function ContactMe({ open, onClose }: ContactMeProps) {
         message: "",
         framework: frameworks[0],
       });
-      onClose();
+      setSuccess("Message sent! I'll get back to you soon.");
+      setTimeout(() => {
+        setSuccess(null);
+        onClose();
+      }, 1200);
     } catch (sendError) {
       setError(
         sendError instanceof Error
@@ -178,7 +184,10 @@ export default function ContactMe({ open, onClose }: ContactMeProps) {
               </div>
             </div>
             {error ? (
-              <p className="title16 text-red-400">{error}</p>
+              <p className="title16 !text-red-400">{error}</p>
+            ) : null}
+            {success ? (
+              <p className="title16 !text-green-400">{success}</p>
             ) : null}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
               <Button

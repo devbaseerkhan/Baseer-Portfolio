@@ -324,7 +324,7 @@ export default function ProjectDetails({
                       key={file.name}
                       type="button"
                       onClick={() => setPreviewIndex(index)}
-                      className="flex sm:basis-[calc(50%-16px)] md:basis-full xl:basis-[calc(50%-16px)] 2xl:basis-[calc(33.33%-16px)] items-center justify-between gap-3 rounded-sm transition hover:bg-primary-10 cursor-pointer"
+                      className="flex sm:basis-[calc(50%-16px)] md:basis-full xl:basis-[calc(50%-16px)] 2xl:basis-[calc(33.33%-16px)] 2xl:flex-1 items-center justify-between gap-3 rounded-sm transition hover:bg-primary-10 cursor-pointer"
                     >
                       <div className="flex items-center gap-3 text-left">
                         <span className="flex h-12 w-12 min-h-12 min-w-12 items-center justify-center bg-primary-30 rounded-sm">

@@ -84,3 +84,22 @@ export async function fetchProfile(): Promise<ListResult<ProfileRecord>> {
   }
   return { data: data ?? [], error: null };
 }
+
+export async function updateProfileCoins(
+  id: string,
+  nextBalance: number,
+): Promise<{ success: boolean; error: string | null }> {
+  const client = getSupabaseClient();
+  if (!client) return { success: false, error: "Supabase not configured" };
+
+  const { error } = await client
+    .from("profile")
+    .update({ coin_balance: nextBalance })
+    .eq("id", id);
+
+  if (error) {
+    console.error("[supabase] updateProfileCoins", error);
+    return { success: false, error: error.message };
+  }
+  return { success: true, error: null };
+}

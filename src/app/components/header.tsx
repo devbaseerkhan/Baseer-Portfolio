@@ -3,7 +3,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 
 import { useEffect, useMemo, useState } from "react";
-import { fetchProfile } from "@/lib/contentApi";
+import { fetchProfile, updateProfileCoins } from "@/lib/contentApi";
 import { fallbackProfile } from "@/lib/fallbackContent";
 import type { ProfileRecord } from "@/lib/contentTypes";
 
@@ -15,7 +15,6 @@ type HeaderProps = React.HTMLAttributes<HTMLElement> & {
 const DEFAULT_LEVEL = 25; // developer-defined level
 const DEFAULT_BASE_COINS = 500; // starting coins set by developer
 const DEFAULT_REWARD = 1; // reward per click
-const STORAGE_KEY = "portfolio-coin-balance-v1";
 const VISITED_KEY = "portfolio-coin-visited-v1";
 
 export default function Header({
@@ -32,28 +31,25 @@ export default function Header({
     fallbackProfile.coin_reward_per_click ??
     DEFAULT_REWARD;
 
-  const storageKey = `${STORAGE_KEY}-${profile?.id ?? "default"}`;
   const visitedKey = `${VISITED_KEY}-${profile?.id ?? "default"}`;
 
-  const [coins, setCoins] = useState(baseCoins);
+  const [coins, setCoins] = useState(
+    profile?.coin_balance ??
+      fallbackProfile.coin_balance ??
+      baseCoins,
+  );
   const [visited, setVisited] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  // hydrate from localStorage after mount and seed defaults if missing
+  // hydrate visited flag per profile
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const storedCoins = Number.parseInt(
-      window.localStorage.getItem(storageKey) ?? "",
-      10,
-    );
     const storedVisited = window.localStorage.getItem(visitedKey) === "1";
-    const nextCoins = Number.isFinite(storedCoins) ? storedCoins : baseCoins;
-    setCoins(nextCoins);
     setVisited(storedVisited);
-    window.localStorage.setItem(storageKey, String(nextCoins));
     window.localStorage.setItem(visitedKey, storedVisited ? "1" : "0");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storageKey, visitedKey, baseCoins]);
+  }, [visitedKey]);
 
   useEffect(() => {
     let mounted = true;
@@ -76,16 +72,13 @@ export default function Header({
 
   useEffect(() => {
     if (!profile) return;
-    if (typeof window === "undefined") return;
-    const storedCoins = Number.parseInt(
-      window.localStorage.getItem(storageKey) ?? "",
-      10,
-    );
-    const nextCoins = Number.isFinite(storedCoins) ? storedCoins : baseCoins;
+    const nextCoins =
+      profile.coin_balance ??
+      fallbackProfile.coin_balance ??
+      baseCoins;
     setCoins(nextCoins);
-    window.localStorage.setItem(storageKey, String(nextCoins));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile?.id, storageKey, baseCoins]);
+  }, [profile?.id, baseCoins]);
 
   const showToast = (message: string) => {
     setToast(message);
@@ -93,18 +86,37 @@ export default function Header({
   };
 
   const addCoins = () => {
+    if (!profile?.id) {
+      showToast("Profile not loaded yet.");
+      return;
+    }
     if (visited) {
       showToast("You already visited.");
       return;
     }
-    setCoins((prev) => {
-      const next = prev + coinReward;
-      window.localStorage.setItem(storageKey, String(next));
-      window.localStorage.setItem(visitedKey, "1");
-      return next;
-    });
-    setVisited(true);
-    showToast(`+${coinReward} coin added`);
+    if (saving) return;
+
+    const next = coins + coinReward;
+    setSaving(true);
+    void updateProfileCoins(profile.id, next)
+      .then((result) => {
+        if (!result.success) {
+          showToast(result.error ?? "Failed to save coins.");
+          return;
+        }
+        setCoins(next);
+        setVisited(true);
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(visitedKey, "1");
+        }
+        showToast(`+${coinReward} coin added`);
+      })
+      .catch(() => {
+        showToast("Failed to save coins.");
+      })
+      .finally(() => {
+        setSaving(false);
+      });
   };
 
   const formattedCoins = useMemo(

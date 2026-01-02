@@ -35,6 +35,7 @@ export type ProfileRecord = {
   level?: number | null;
   base_coins?: number | null;
   coin_reward_per_click?: number | null;
+  coin_balance?: number | null;
 };
 
 export type LogRecord = {

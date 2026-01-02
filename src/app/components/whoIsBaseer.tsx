@@ -52,18 +52,18 @@ export default function WhoIsBaseer({ open, onClose }: WhoIsBaseerProps) {
   return (
     <div className="fixed inset-0 z-50 bg-black/70 lg:bg-black/10 backdrop-blur py-6 px-[4%] xl:px-[8%] 2xl:px-[15%] flex justify-center items-center">
       <div className="relative max-h-[90%] overflow-y-auto flex flex-col lg:gap-14 border border-primary bg-primary-10 backdrop-blur-sm">
-        <div className="w-full sticky top-0 bg-black/70 lg:bg-primary-10 px-4 md:px-8 py-2 md:py-4 backdrop-blur z-20">
+        <div className="w-full sticky top-0 bg-black/70 px-4 md:px-8 py-2 md:py-4 backdrop-blur z-20">
           <div className="flex items-start justify-center gap-3 relative">
             <div className="space-y-1 text-center">
               <p className="title16">The short introduction of my life</p>
               <h2 className="text-xl sm:text-2xl lg:text-4xl font-big font-bold uppercase tracking-[0.2em] text-primary">
-                {profile.who_is ?? "Who is Baseer Ahmed Khan"}
+                Who is{" "}{profile.who_is ?? "Baseer Ahmed Khan"}
               </h2>
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="absolute top-0 right-0 flex h-10 w-10 items-center justify-center border border-white/20 bg-black/30 text-white/70 transition hover:border-primary hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark"
+              className="absolute top-0 right-0 flex h-10 w-10 cursor-pointer items-center justify-center border border-white/20 bg-black/30 text-white/70 transition hover:border-primary hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark"
               aria-label="Close bio modal"
             >
               <IoClose className="text-2xl" />

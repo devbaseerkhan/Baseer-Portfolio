@@ -256,7 +256,7 @@ export const fallbackProfile: ProfileRecord = {
   name: "Baseer Ahmed Khan",
   occupation: "Frontend Engineer",
   corporation: "Independent",
-  availability: "Available for new projects",
+  availability: "open for hire",
   motto: "Shipping expressive, resilient web experiences.",
   who_is: "Baseer Ahmed Khan",
   career_and_development:
@@ -268,4 +268,5 @@ export const fallbackProfile: ProfileRecord = {
   level: 25,
   base_coins: 500,
   coin_reward_per_click: 1,
+  coin_balance: 500,
 };

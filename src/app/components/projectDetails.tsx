@@ -12,6 +12,7 @@ import Badge from "./Badge";
 import { FaGit, FaJs, FaJsSquare, FaReact } from "react-icons/fa";
 import { RiNextjsLine, RiTailwindCssFill } from "react-icons/ri";
 import { FaNodeJs } from "react-icons/fa6";
+import { SiFigma, SiMongodb, SiMysql, SiNestjs, SiWebflow } from "react-icons/si";
 import PreviewingImage from "./previewingImage";
 
 type TechListItem = { name: string; icon: ReactNode };
@@ -22,15 +23,27 @@ type ProjectDetailsProps = {
 };
 
 const techIcons: Record<string, ReactNode> = {
-  "Next.js": <RiNextjsLine />,
-  React: <FaReact />,
-  TypeScript: <FaJsSquare />,
-  JS: <FaJsSquare />,
-  JavaScript: <FaJs />,
-  "Node.js": <FaNodeJs />,
-  Tailwind: <RiTailwindCssFill />,
-  TailwindCSS: <RiTailwindCssFill />,
-  Git: <FaGit />,
+  "next.js": <RiNextjsLine />,
+  nextjs: <RiNextjsLine />,
+  react: <FaReact />,
+  "react.js": <FaReact />,
+  reactjs: <FaReact />,
+  "react native": <FaReact />,
+  typescript: <FaJsSquare />,
+  ts: <FaJsSquare />,
+  js: <FaJsSquare />,
+  javascript: <FaJs />,
+  "node.js": <FaNodeJs />,
+  nodejs: <FaNodeJs />,
+  tailwind: <RiTailwindCssFill />,
+  tailwindcss: <RiTailwindCssFill />,
+  git: <FaGit />,
+  figma: <SiFigma />,
+  webflow: <SiWebflow />,
+  nestjs: <SiNestjs />,
+  mongodb: <SiMongodb />,
+  mongo: <SiMongodb />,
+  mysql: <SiMysql />,
 };
 
 const previewPlaceholders = [
@@ -75,12 +88,15 @@ export default function ProjectDetails({
   const collapsedTextHeight = "7.5em"; // ~5 lines
   const collapsedListHeight = "6.5em"; // roughly 3 bullets
   const techList: TechListItem[] = project.technologies?.length
-    ? project.technologies.map((name) => ({
-        name,
-        icon: techIcons[name] ?? (
-          <span className="title12 text-primary">{name}</span>
-        ),
-      }))
+    ? project.technologies.map((name) => {
+        const normalized = name.trim().toLowerCase();
+        return {
+          name,
+          icon: techIcons[normalized] ?? (
+            <span className="title12 text-primary">{name}</span>
+          ),
+        };
+      })
     : defaultTech;
   const files = project.files?.length ? project.files : defaultFiles;
   const aboutText =
